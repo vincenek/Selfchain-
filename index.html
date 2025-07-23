@@ -937,12 +937,12 @@
         
         // Show specific screen
         function showScreen(screen) {
-            introScreen.classList.remove('active');
-            aboutScreen.classList.remove('active');
-            enrollScreen.classList.remove('active');
-            verifyScreen.classList.remove('active');
-            identityCreatedScreen.classList.remove('active');
+            // Hide all screens
+            [introScreen, aboutScreen, enrollScreen, verifyScreen, identityCreatedScreen].forEach(s => {
+                s.classList.remove('active');
+            });
             
+            // Show the requested screen
             screen.classList.add('active');
         }
         
