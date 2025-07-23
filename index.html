@@ -1301,10 +1301,15 @@
         });
         
         learnMoreBtn.addEventListener('click', () => {
+            // Update navigation
+            navLinks.forEach(link => link.classList.remove('active'));
             showScreen(aboutScreen);
         });
         
         backToDashboardBtn.addEventListener('click', () => {
+            // Update navigation
+            navLinks.forEach(link => link.classList.remove('active'));
+            document.querySelector('[data-target="introScreen"]').classList.add('active');
             showScreen(introScreen);
         });
         
