@@ -1169,6 +1169,20 @@
         
         // Complete enrollment process
         function completeEnrollment() {
+            // Validate the typed phrase
+            if (phraseInput.value !== targetPhrase) {
+                alert('Please type the phrase exactly as shown: "This is me"');
+                resetEnrollment();
+                return;
+            }
+            
+            // Validate we have both typing and mouse data
+            if (typingData.length === 0 || mouseData.length === 0) {
+                alert('Please complete both typing and movement steps');
+                resetEnrollment();
+                return;
+            }
+
             // Generate signature
             const signature = generateSignature(typingData, mouseData);
             
