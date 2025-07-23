@@ -315,6 +315,10 @@
             overflow: hidden;
             background: rgba(15, 23, 42, 0.3);
             margin-top: 15px;
+            touch-action: none; /* Prevent scrolling on mobile */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
         
         .tracker-instructions {
@@ -331,13 +335,30 @@
         
         .tracker-path {
             position: absolute;
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             background: var(--secondary);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             pointer-events: none;
             z-index: 10;
+            box-shadow: 0 0 8px rgba(76, 201, 240, 0.7);
+        }
+        
+        /* Mobile specific */
+        .device-notice {
+            display: none;
+            background: rgba(243, 156, 18, 0.1);
+            border: 1px solid var(--warning);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .device-notice i {
+            color: var(--warning);
+            margin-right: 8px;
         }
         
         /* Results */
@@ -499,6 +520,22 @@
                 font-size: 1.1rem;
                 padding: 15px;
             }
+            
+            .device-notice {
+                display: flex;
+            }
+            
+            .tracker-box {
+                height: 200px;
+            }
+            
+            .result-icon {
+                font-size: 3rem;
+            }
+            
+            .result-title {
+                font-size: 1.5rem;
+            }
         }
         
         /* Screen states */
@@ -574,6 +611,12 @@
             </aside>
             
             <main class="main-content">
+                <!-- Mobile notice -->
+                <div class="device-notice">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>For best results, use your finger to create movement patterns on mobile devices</span>
+                </div>
+                
                 <!-- Intro Screen -->
                 <div id="introScreen" class="screen active">
                     <div class="section-title">
@@ -581,7 +624,7 @@
                         <h1>Behavioral Identity Verification</h1>
                     </div>
                     
-                    <p>SelfChain creates a unique digital identity based on your typing patterns and mouse movements. This biometric signature becomes your personal key for secure authentication.</p>
+                    <p>SelfChain creates a unique digital identity based on your typing patterns and movement behavior. This biometric signature becomes your personal key for secure authentication.</p>
                     
                     <div class="card">
                         <div class="card-header">
@@ -594,9 +637,9 @@
                                 <p>We measure the unique rhythm of your keystrokes</p>
                             </div>
                             <div class="stat-card">
-                                <i class="fas fa-mouse-pointer fa-2x" style="color: #4361ee; margin-bottom: 15px;"></i>
-                                <h3>Mouse Movement</h3>
-                                <p>We analyze your natural mouse movements</p>
+                                <i class="fas fa-mobile-alt fa-2x" style="color: #4361ee; margin-bottom: 15px;"></i>
+                                <h3>Movement Behavior</h3>
+                                <p>We analyze your natural movement patterns</p>
                             </div>
                             <div class="stat-card">
                                 <i class="fas fa-fingerprint fa-2x" style="color: #2ecc71; margin-bottom: 15px;"></i>
@@ -638,11 +681,11 @@
                     
                     <div class="card">
                         <div class="card-header">
-                            <h2>Step 2: Mouse Movement</h2>
+                            <h2>Step 2: Movement Pattern</h2>
                         </div>
                         <div class="tracker-container">
                             <div class="tracker-header">
-                                <h3>Move your mouse naturally in the box below</h3>
+                                <h3>Move your cursor/finger naturally in the box below</h3>
                                 <div class="timer" id="mouseTimer">5.0s</div>
                             </div>
                             <div class="progress-container">
@@ -651,7 +694,7 @@
                                 </div>
                             </div>
                             <div class="tracker-box" id="mouseTracker">
-                                <div class="tracker-instructions">Move your mouse in this area to create your movement pattern</div>
+                                <div class="tracker-instructions">Move your cursor or finger in this area</div>
                             </div>
                         </div>
                     </div>
@@ -685,11 +728,11 @@
                     
                     <div class="card">
                         <div class="card-header">
-                            <h2>Step 2: Mouse Movement</h2>
+                            <h2>Step 2: Movement Pattern</h2>
                         </div>
                         <div class="tracker-container">
                             <div class="tracker-header">
-                                <h3>Move your mouse naturally in the box below</h3>
+                                <h3>Move your cursor/finger naturally in the box below</h3>
                                 <div class="timer" id="verifyMouseTimer">5.0s</div>
                             </div>
                             <div class="progress-container">
@@ -698,7 +741,7 @@
                                 </div>
                             </div>
                             <div class="tracker-box" id="verifyMouseTracker">
-                                <div class="tracker-instructions">Move your mouse in this area to verify your movement pattern</div>
+                                <div class="tracker-instructions">Move your cursor or finger in this area</div>
                             </div>
                         </div>
                     </div>
@@ -743,7 +786,7 @@
                         <div class="signature-display" id="signatureDisplay">
                             <!-- Signature will be displayed here -->
                         </div>
-                        <p>This unique identifier is generated from your typing rhythm and mouse movement patterns. It's stored locally on this device and never transmitted to any server.</p>
+                        <p>This unique identifier is generated from your typing rhythm and movement patterns. It's stored locally on this device and never transmitted to any server.</p>
                     </div>
                     
                     <div class="btn-group">
@@ -918,8 +961,8 @@
             return (matchCount / sig1.length) * 100;
         }
         
-        // Start mouse movement recording
-        function startMouseRecording(verify = false) {
+        // Start movement recording (works for both mouse and touch)
+        function startMovementRecording(verify = false) {
             const tracker = verify ? verifyMouseTracker : mouseTracker;
             const timer = verify ? verifyMouseTimer : mouseTimer;
             const progress = verify ? verifyMouseProgress : mouseProgress;
@@ -943,13 +986,8 @@
                 }
             }
             
-            // Add event listener for mouse movement
-            const handleMouseMove = (e) => {
-                const rect = tracker.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const timestamp = Date.now();
-                
+            // Handle movement for both mouse and touch
+            const handleMovement = (x, y, timestamp) => {
                 const dataPoint = { x, y, timestamp };
                 
                 if (verify) {
@@ -966,7 +1004,29 @@
                 tracker.appendChild(pathPoint);
             };
             
+            // Mouse movement handler
+            const handleMouseMove = (e) => {
+                const rect = tracker.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                handleMovement(x, y, Date.now());
+            };
+            
+            // Touch movement handler
+            const handleTouchMove = (e) => {
+                e.preventDefault(); // Prevent scrolling on mobile
+                if (e.touches.length === 0) return;
+                
+                const touch = e.touches[0];
+                const rect = tracker.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                handleMovement(x, y, Date.now());
+            };
+            
+            // Add event listeners
             tracker.addEventListener('mousemove', handleMouseMove);
+            tracker.addEventListener('touchmove', handleTouchMove, { passive: false });
             
             // Start timer
             const duration = 5000; // 5 seconds
@@ -984,6 +1044,7 @@
                         clearInterval(verifyMouseInterval);
                         verifyMouseRecording = false;
                         tracker.removeEventListener('mousemove', handleMouseMove);
+                        tracker.removeEventListener('touchmove', handleTouchMove);
                         completeVerification();
                     }
                 }, 50);
@@ -999,6 +1060,7 @@
                         clearInterval(mouseInterval);
                         mouseRecording = false;
                         tracker.removeEventListener('mousemove', handleMouseMove);
+                        tracker.removeEventListener('touchmove', handleTouchMove);
                         completeEnrollment();
                     }
                 }, 50);
@@ -1188,9 +1250,9 @@
                 
                 analyzeTyping(phraseInput.value, targetPhrase, typingStartTime);
                 
-                // Start mouse recording when user starts typing
+                // Start movement recording when user starts typing
                 if (phraseInput.value.length === 1 && !mouseRecording) {
-                    startMouseRecording();
+                    startMovementRecording();
                 }
             });
         }
@@ -1213,7 +1275,7 @@
             verifyBtn.addEventListener('click', () => {
                 if (!verifyMouseRecording) {
                     resetVerification();
-                    startMouseRecording(true);
+                    startMovementRecording(true);
                 }
             });
         }
