@@ -1296,7 +1296,7 @@
             
             showScreen(enrollScreen);
             setTimeout(() => {
-                phraseInput.focus();
+                if (phraseInput) phraseInput.focus();
             }, 300);
         });
         
