@@ -315,7 +315,7 @@
             overflow: hidden;
             background: rgba(15, 23, 42, 0.3);
             margin-top: 15px;
-            touch-action: none; /* Prevent scrolling on mobile */
+            touch-action: none;
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             user-select: none;
@@ -480,6 +480,30 @@
             font-size: 0.9rem;
         }
         
+        /* About Section */
+        .about-content {
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.3);
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 1px solid var(--card-border);
+        }
+        
+        .feature-list {
+            margin-top: 20px;
+            padding-left: 20px;
+        }
+        
+        .feature-list li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+        
+        .feature-list li i {
+            color: var(--secondary);
+            margin-right: 10px;
+        }
+        
         /* Responsive */
         @media (max-width: 900px) {
             .app-content {
@@ -561,7 +585,7 @@
             <span class="logo-text">SelfChain</span>
         </div>
         <div class="nav-controls">
-            <button class="btn btn-sm btn-secondary">
+            <button class="btn btn-sm btn-secondary" id="helpBtn">
                 <i class="fas fa-question-circle"></i> Help
             </button>
         </div>
@@ -653,8 +677,46 @@
                         <button id="createIdentityBtn" class="btn">
                             <i class="fas fa-id-card"></i> Create Identity
                         </button>
-                        <button class="btn btn-secondary">
+                        <button id="learnMoreBtn" class="btn btn-secondary">
                             <i class="fas fa-book"></i> Learn More
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- About Screen -->
+                <div id="aboutScreen" class="screen">
+                    <div class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        <h1>About SelfChain</h1>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Advanced Behavioral Biometrics</h2>
+                        </div>
+                        <p>SelfChain uses cutting-edge technology to create a unique identity signature based on your individual behavioral patterns.</p>
+                        
+                        <div class="about-content">
+                            <h3>How It Works</h3>
+                            <p>When you create your identity, SelfChain records:</p>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-keyboard"></i> Your unique typing rhythm and cadence</li>
+                                <li><i class="fas fa-mouse-pointer"></i> Your natural movement patterns (mouse or touch)</li>
+                                <li><i class="fas fa-lock"></i> Combined data points that form your behavioral fingerprint</li>
+                            </ul>
+                            
+                            <h3>Security Features</h3>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-shield-alt"></i> 256-bit encryption of your behavioral signature</li>
+                                <li><i class="fas fa-user-secret"></i> Data never leaves your device</li>
+                                <li><i class="fas fa-bolt"></i> Real-time verification with 98% accuracy</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button id="backToDashboardBtn" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
                         </button>
                     </div>
                 </div>
@@ -813,10 +875,14 @@
     <script>
         // DOM Elements
         const introScreen = document.getElementById('introScreen');
+        const aboutScreen = document.getElementById('aboutScreen');
         const enrollScreen = document.getElementById('enrollScreen');
         const verifyScreen = document.getElementById('verifyScreen');
         const identityCreatedScreen = document.getElementById('identityCreatedScreen');
         const createIdentityBtn = document.getElementById('createIdentityBtn');
+        const learnMoreBtn = document.getElementById('learnMoreBtn');
+        const backToDashboardBtn = document.getElementById('backToDashboardBtn');
+        const helpBtn = document.getElementById('helpBtn');
         const cancelEnrollBtn = document.getElementById('cancelEnrollBtn');
         const verifyBtn = document.getElementById('verifyBtn');
         const resetBtn = document.getElementById('resetBtn');
@@ -872,6 +938,7 @@
         // Show specific screen
         function showScreen(screen) {
             introScreen.classList.remove('active');
+            aboutScreen.classList.remove('active');
             enrollScreen.classList.remove('active');
             verifyScreen.classList.remove('active');
             identityCreatedScreen.classList.remove('active');
@@ -1214,6 +1281,11 @@
             }
         }
         
+        // Show help information
+        function showHelp() {
+            alert("SelfChain Help:\n\n1. Create Identity: Establish your unique behavioral signature\n2. Verify Identity: Confirm your identity using your behavior\n3. Reset Identity: Delete your stored signature\n4. Export: Save your signature for backup");
+        }
+        
         // Event Listeners
         createIdentityBtn.addEventListener('click', () => {
             resetEnrollment();
@@ -1227,6 +1299,16 @@
                 phraseInput.focus();
             }, 300);
         });
+        
+        learnMoreBtn.addEventListener('click', () => {
+            showScreen(aboutScreen);
+        });
+        
+        backToDashboardBtn.addEventListener('click', () => {
+            showScreen(introScreen);
+        });
+        
+        helpBtn.addEventListener('click', showHelp);
         
         cancelEnrollBtn.addEventListener('click', () => {
             resetEnrollment();
