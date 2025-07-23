@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SelfChain: Become Your Digital Signature</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0ff;
+            --secondary: #f0f;
+            --background: #0f0f1a;
+            --card-bg: #1a1a2e;
+            --text: #e0e0ff;
+            --success: #0f0;
+            --error: #f00;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: var(--background);
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .background-dots {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.2;
+        }
+        
+        .dot {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(20vw);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            z-index: -1;
+            border-radius: 14px;
+        }
+        
+        h1, h2 {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px var(--primary);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin-bottom: 30px;
+        }
+        
+        p {
+            text-align: center;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+        
+        .input-container {
+            margin: 25px 0;
+        }
+        
+        .fixed-phrase {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            color: var(--primary);
+            text-shadow: 0 0 5px var(--primary);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text);
+            font-size: 1.2rem;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            box-shadow: 0 0 15px var(--primary);
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        button {
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            min-width: 180px;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        button:hover {
+            box-shadow: 0 0 20px var(--primary);
+            transform: translateY(-3px);
+            color: #fff;
+        }
+        
+        button:hover::before {
+            opacity: 0.2;
+        }
+        
+        #resetBtn {
+            border-color: var(--secondary);
+        }
+        
+        #resetBtn:hover {
+            box-shadow: 0 0 20px var(--secondary);
+        }
+        
+        .tracker-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .tracker-box {
+            height: 200px;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+            margin-top: 15px;
+        }
+        
+        .tracker-path {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px var(--primary);
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .timer {
+            font-size: 2rem;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: rgba(0, 255, 255, 0.2);
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px var(--primary);
+        }
+        
+        .result {
+            text-align: center;
+            font-size: 1.5rem;
+            margin: 25px 0;
+            padding: 20px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        
+        .success {
+            color: var(--success);
+            text-shadow: 0 0 10px var(--success);
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid var(--success);
+        }
+        
+        .error {
+            color: var(--error);
+            text-shadow: 0 0 10px var(--error);
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid var(--error);
+        }
+        
+        .signature-display {
+            word-break: break-all;
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid var(--primary);
+        }
+        
+        .screen {
+            display: none;
+        }
+        
+        .active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .instructions {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid var(--primary);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                width: 95%;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            button {
+                min-width: 140px;
+                padding: 10px 15px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background dots -->
+    <div class="background-dots" id="backgroundDots"></div>
+    
+    <div class="container">
+        <!-- Intro Screen -->
+        <div id="introScreen" class="screen active">
+            <h1>SelfChain</h1>
+            <h2>Become Your Digital Signature</h2>
+            <p>Create a unique identity signature based on your typing patterns and mouse movements.</p>
+            <p>Your behavioral biometrics become your personal key to digital identity verification.</p>
+            <div class="button-group">
+                <button id="createIdentityBtn">Create My Identity</button>
+            </div>
+        </div>
+        
+        <!-- Enrollment Screen -->
+        <div id="enrollScreen" class="screen">
+            <h2>Create Your Identity</h2>
+            <p>Type the phrase below and move your mouse naturally in the box for 5 seconds.</p>
+            
+            <div class="fixed-phrase">This is me</div>
+            
+            <div class="input-container">
+                <input type="text" id="phraseInput" placeholder="Type the phrase above" autocomplete="off">
+            </div>
+            
+            <div class="tracker-container">
+                <div class="timer" id="mouseTimer">5.0s</div>
+                <div class="progress-bar">
+                    <div class="progress" id="mouseProgress"></div>
+                </div>
+                <div class="tracker-box" id="mouseTracker"></div>
+            </div>
+            
+            <div class="button-group">
+                <button id="cancelEnrollBtn">Cancel</button>
+            </div>
+        </div>
+        
+        <!-- Verification Screen -->
+        <div id="verifyScreen" class="screen">
+            <h2>Verify Your Identity</h2>
+            <p>Type the phrase below and move your mouse naturally in the box to verify your identity.</p>
+            
+            <div class="fixed-phrase">This is me</div>
+            
+            <div class="input-container">
+                <input type="text" id="verifyPhraseInput" placeholder="Type the phrase above" autocomplete="off">
+            </div>
+            
+            <div class="tracker-container">
+                <div class="timer" id="verifyMouseTimer">5.0s</div>
+                <div class="progress-bar">
+                    <div class="progress" id="verifyMouseProgress"></div>
+                </div>
+                <div class="tracker-box" id="verifyMouseTracker"></div>
+            </div>
+            
+            <div id="verificationResult" class="result"></div>
+            
+            <div class="button-group">
+                <button id="verifyBtn">Verify Identity</button>
+                <button id="resetBtn">Reset Identity</button>
+                <button id="exportBtn">Export Signature</button>
+            </div>
+        </div>
+        
+        <!-- Identity Created Screen -->
+        <div id="identityCreatedScreen" class="screen">
+            <h2>Identity Created!</h2>
+            <p>Your unique behavioral signature has been generated and stored locally.</p>
+            
+            <div class="signature-display" id="signatureDisplay"></div>
+            
+            <p>You can now verify your identity using your unique behavioral patterns.</p>
+            
+            <div class="button-group">
+                <button id="goToVerifyBtn">Verify Identity</button>
+                <button id="exportAfterCreateBtn">Export Signature</button>
+                <button id="resetAfterCreateBtn">Reset Identity</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const introScreen = document.getElementById('introScreen');
+        const enrollScreen = document.getElementById('enrollScreen');
+        const verifyScreen = document.getElementById('verifyScreen');
+        const identityCreatedScreen = document.getElementById('identityCreatedScreen');
+        const createIdentityBtn = document.getElementById('createIdentityBtn');
+        const cancelEnrollBtn = document.getElementById('cancelEnrollBtn');
+        const verifyBtn = document.getElementById('verifyBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const goToVerifyBtn = document.getElementById('goToVerifyBtn');
+        const exportAfterCreateBtn = document.getElementById('exportAfterCreateBtn');
+        const resetAfterCreateBtn = document.getElementById('resetAfterCreateBtn');
+        const phraseInput = document.getElementById('phraseInput');
+        const verifyPhraseInput = document.getElementById('verifyPhraseInput');
+        const mouseTracker = document.getElementById('mouseTracker');
+        const verifyMouseTracker = document.getElementById('verifyMouseTracker');
+        const mouseTimer = document.getElementById('mouseTimer');
+        const verifyMouseTimer = document.getElementById('verifyMouseTimer');
+        const mouseProgress = document.getElementById('mouseProgress');
+        const verifyMouseProgress = document.getElementById('verifyMouseProgress');
+        const signatureDisplay = document.getElementById('signatureDisplay');
+        const verificationResult = document.getElementById('verificationResult');
+        const backgroundDots = document.getElementById('backgroundDots');
+        
+        // State variables
+        let storedSignature = null;
+        let mouseData = [];
+        let typingData = [];
+        let verifyMouseData = [];
+        let verifyTypingData = [];
+        let mouseInterval = null;
+        let verifyMouseInterval = null;
+        let mouseRecording = false;
+        let verifyMouseRecording = false;
+        let mouseStartTime = 0;
+        let verifyMouseStartTime = 0;
+        let typingStartTime = 0;
+        let verifyTypingStartTime = 0;
+        const targetPhrase = "This is me";
+        
+        // Initialize background dots
+        function initBackgroundDots() {
+            const dotsCount = 50;
+            for (let i = 0; i < dotsCount; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                dot.style.left = `${Math.random() * 100}%`;
+                dot.style.top = `${Math.random() * 100}%`;
+                dot.style.animationDelay = `${Math.random() * 15}s`;
+                dot.style.width = `${2 + Math.random() * 3}px`;
+                dot.style.height = dot.style.width;
+                backgroundDots.appendChild(dot);
+            }
+        }
+        
+        // Show specific screen
+        function showScreen(screen) {
+            introScreen.classList.remove('active');
+            enrollScreen.classList.remove('active');
+            verifyScreen.classList.remove('active');
+            identityCreatedScreen.classList.remove('active');
+            
+            screen.classList.add('active');
+        }
+        
+        // Reset enrollment state
+        function resetEnrollment() {
+            mouseData = [];
+            typingData = [];
+            phraseInput.value = '';
+            mouseTimer.textContent = '5.0s';
+            mouseProgress.style.width = '0%';
+            
+            // Clear any existing paths
+            while (mouseTracker.firstChild) {
+                mouseTracker.removeChild(mouseTracker.firstChild);
+            }
+        }
+        
+        // Reset verification state
+        function resetVerification() {
+            verifyMouseData = [];
+            verifyTypingData = [];
+            verifyPhraseInput.value = '';
+            verifyMouseTimer.textContent = '5.0s';
+            verifyMouseProgress.style.width = '0%';
+            verificationResult.textContent = '';
+            verificationResult.className = 'result';
+            
+            // Clear any existing paths
+            while (verifyMouseTracker.firstChild) {
+                verifyMouseTracker.removeChild(verifyMouseTracker.firstChild);
+            }
+        }
+        
+        // Generate a unique signature from behavior data
+        function generateSignature(typingPattern, mousePattern) {
+            // Combine data
+            const combinedData = {
+                typing: typingPattern,
+                mouse: mousePattern
+            };
+            
+            // Create a simple hash from the data
+            const dataString = JSON.stringify(combinedData);
+            let hash = 0;
+            
+            if (dataString.length === 0) return '';
+            
+            for (let i = 0; i < dataString.length; i++) {
+                const char = dataString.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            
+            // Convert to hex and base64 for a more compact representation
+            const hexString = (hash >>> 0).toString(16);
+            const base64String = btoa(hexString);
+            
+            return base64String.substring(0, 32); // Return first 32 characters
+        }
+        
+        // Calculate similarity between two signatures
+        function calculateSimilarity(sig1, sig2) {
+            if (sig1.length !== sig2.length) return 0;
+            
+            let matchCount = 0;
+            
+            for (let i = 0; i < sig1.length; i++) {
+                if (sig1[i] === sig2[i]) {
+                    matchCount++;
+                }
+            }
+            
+            return (matchCount / sig1.length) * 100;
+        }
+        
+        // Start mouse movement recording
+        function startMouseRecording(verify = false) {
+            const tracker = verify ? verifyMouseTracker : mouseTracker;
+            const timer = verify ? verifyMouseTimer : mouseTimer;
+            const progress = verify ? verifyMouseProgress : mouseProgress;
+            
+            if (verify) {
+                verifyMouseRecording = true;
+                verifyMouseData = [];
+                verifyMouseStartTime = Date.now();
+            } else {
+                mouseRecording = true;
+                mouseData = [];
+                mouseStartTime = Date.now();
+            }
+            
+            // Clear previous paths
+            while (tracker.firstChild) {
+                tracker.removeChild(tracker.firstChild);
+            }
+            
+            // Add event listener for mouse movement
+            const handleMouseMove = (e) => {
+                const rect = tracker.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const timestamp = Date.now();
+                
+                const dataPoint = { x, y, timestamp };
+                
+                if (verify) {
+                    verifyMouseData.push(dataPoint);
+                } else {
+                    mouseData.push(dataPoint);
+                }
+                
+                // Create a visual indicator of the path
+                const pathPoint = document.createElement('div');
+                pathPoint.classList.add('tracker-path');
+                pathPoint.style.left = `${x}px`;
+                pathPoint.style.top = `${y}px`;
+                tracker.appendChild(pathPoint);
+            };
+            
+            tracker.addEventListener('mousemove', handleMouseMove);
+            
+            // Start timer
+            const duration = 5000; // 5 seconds
+            let elapsed = 0;
+            
+            if (verify) {
+                clearInterval(verifyMouseInterval);
+                verifyMouseInterval = setInterval(() => {
+                    elapsed = Date.now() - verifyMouseStartTime;
+                    const remaining = Math.max(0, duration - elapsed);
+                    timer.textContent = (remaining / 1000).toFixed(1) + 's';
+                    progress.style.width = `${(elapsed / duration) * 100}%`;
+                    
+                    if (elapsed >= duration) {
+                        clearInterval(verifyMouseInterval);
+                        verifyMouseRecording = false;
+                        tracker.removeEventListener('mousemove', handleMouseMove);
+                        if (verify) {
+                            completeVerification();
+                        }
+                    }
+                }, 50);
+            } else {
+                clearInterval(mouseInterval);
+                mouseInterval = setInterval(() => {
+                    elapsed = Date.now() - mouseStartTime;
+                    const remaining = Math.max(0, duration - elapsed);
+                    timer.textContent = (remaining / 1000).toFixed(1) + 's';
+                    progress.style.width = `${(elapsed / duration) * 100}%`;
+                    
+                    if (elapsed >= duration) {
+                        clearInterval(mouseInterval);
+                        mouseRecording = false;
+                        tracker.removeEventListener('mousemove', handleMouseMove);
+                        completeEnrollment();
+                    }
+                }, 50);
+            }
+        }
+        
+        // Analyze typing pattern
+        function analyzeTyping(input, target, startTime, isVerification = false) {
+            const pattern = [];
+            let lastKeyTime = startTime;
+            
+            for (let i = 0; i < input.length; i++) {
+                if (i < target.length) {
+                    const char = input[i];
+                    const targetChar = target[i];
+                    const isCorrect = char === targetChar;
+                    const timeDiff = i === 0 ? 0 : Date.now() - lastKeyTime;
+                    
+                    pattern.push({
+                        char,
+                        targetChar,
+                        isCorrect,
+                        timeDiff,
+                        position: i
+                    });
+                    
+                    lastKeyTime = Date.now();
+                }
+            }
+            
+            if (isVerification) {
+                verifyTypingData = pattern;
+            } else {
+                typingData = pattern;
+            }
+            
+            return pattern;
+        }
+        
+        // Complete enrollment process
+        function completeEnrollment() {
+            // Generate signature
+            storedSignature = generateSignature(typingData, mouseData);
+            
+            // Save to localStorage
+            localStorage.setItem('selfchain_signature', storedSignature);
+            
+            // Display signature
+            signatureDisplay.textContent = storedSignature;
+            
+            // Show identity created screen
+            showScreen(identityCreatedScreen);
+        }
+        
+        // Complete verification process
+        function completeVerification() {
+            // Generate verification signature
+            const verifySignature = generateSignature(verifyTypingData, verifyMouseData);
+            
+            // Retrieve stored signature
+            const storedSig = localStorage.getItem('selfchain_signature');
+            
+            // Calculate similarity
+            const similarity = calculateSimilarity(storedSig, verifySignature);
+            
+            // Display result
+            verificationResult.textContent = `Similarity: ${similarity.toFixed(1)}%`;
+            
+            if (similarity >= 85) {
+                verificationResult.classList.add('success');
+                verificationResult.textContent = `✔ Access Granted (${similarity.toFixed(1)}% match)`;
+            } else {
+                verificationResult.classList.add('error');
+                verificationResult.textContent = `✖ Access Denied (${similarity.toFixed(1)}% match)`;
+            }
+        }
+        
+        // Export signature
+        function exportSignature() {
+            const storedSig = localStorage.getItem('selfchain_signature');
+            
+            if (!storedSig) {
+                alert('No identity signature found!');
+                return;
+            }
+            
+            const data = {
+                signature: storedSig,
+                timestamp: new Date().toISOString(),
+                system: 'SelfChain Identity'
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `selfchain_identity_${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Reset identity
+        function resetIdentity() {
+            if (confirm('Are you sure you want to reset your identity? This action cannot be undone.')) {
+                localStorage.removeItem('selfchain_signature');
+                storedSignature = null;
+                resetEnrollment();
+                resetVerification();
+                showScreen(introScreen);
+            }
+        }
+        
+        // Event Listeners
+        createIdentityBtn.addEventListener('click', () => {
+            resetEnrollment();
+            showScreen(enrollScreen);
+            phraseInput.focus();
+        });
+        
+        cancelEnrollBtn.addEventListener('click', () => {
+            resetEnrollment();
+            showScreen(introScreen);
+        });
+        
+        phraseInput.addEventListener('focus', () => {
+            typingStartTime = Date.now();
+        });
+        
+        phraseInput.addEventListener('input', () => {
+            if (phraseInput.value.length === 1) {
+                typingStartTime = Date.now();
+            }
+            
+            analyzeTyping(phraseInput.value, targetPhrase, typingStartTime);
+            
+            // Start mouse recording when user starts typing
+            if (phraseInput.value.length === 1 && !mouseRecording) {
+                startMouseRecording();
+            }
+        });
+        
+        verifyPhraseInput.addEventListener('focus', () => {
+            verifyTypingStartTime = Date.now();
+        });
+        
+        verifyPhraseInput.addEventListener('input', () => {
+            if (verifyPhraseInput.value.length === 1) {
+                verifyTypingStartTime = Date.now();
+            }
+            
+            analyzeTyping(verifyPhraseInput.value, targetPhrase, verifyTypingStartTime, true);
+        });
+        
+        verifyBtn.addEventListener('click', () => {
+            if (!verifyMouseRecording) {
+                resetVerification();
+                startMouseRecording(true);
+            }
+        });
+        
+        resetBtn.addEventListener('click', resetIdentity);
+        resetAfterCreateBtn.addEventListener('click', resetIdentity);
+        exportBtn.addEventListener('click', exportSignature);
+        exportAfterCreateBtn.addEventListener('click', exportSignature);
+        
+        goToVerifyBtn.addEventListener('click', () => {
+            resetVerification();
+            showScreen(verifyScreen);
+        });
+        
+        // Check for existing identity on load
+        window.addEventListener('DOMContentLoaded', () => {
+            initBackgroundDots();
+            
+            if (localStorage.getItem('selfchain_signature')) {
+                showScreen(verifyScreen);
+            } else {
+                showScreen(introScreen);
+            }
+        });
+    </script>
+</body>
+</html>
