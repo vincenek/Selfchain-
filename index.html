@@ -992,9 +992,18 @@
         // Complete enrollment process
         function completeEnrollment() {
             try {
-                if (typingData.length === 0 || mouseData.length === 0) {
-                    showNotification('Insufficient data for identity creation', 'error');
-                    showScreen(introScreen);
+                // FIX: Added minimum data requirements
+                if (phraseInput.value.length === 0) {
+                    showNotification('Please type at least one character', 'error');
+                    resetEnrollment();
+                    showScreen(enrollScreen);
+                    return;
+                }
+                
+                if (mouseData.length < 10) {
+                    showNotification('Please move your mouse during enrollment', 'error');
+                    resetEnrollment();
+                    showScreen(enrollScreen);
                     return;
                 }
                 
@@ -1025,8 +1034,15 @@
         // Complete verification process
         function completeVerification() {
             try {
-                if (verifyTypingData.length === 0 || verifyMouseData.length === 0) {
-                    showNotification('Insufficient data for verification', 'error');
+                // FIX: Added minimum data requirements
+                if (verifyPhraseInput.value.length === 0) {
+                    showNotification('Please type at least one character', 'error');
+                    resetVerification();
+                    return;
+                }
+                
+                if (verifyMouseData.length < 10) {
+                    showNotification('Please move your mouse during verification', 'error');
                     resetVerification();
                     return;
                 }
