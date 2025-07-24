@@ -313,6 +313,7 @@
             background: rgba(30, 30, 46, 0.6);
             margin-top: 20px;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+            touch-action: none;
         }
         
         .tracker-path {
@@ -505,6 +506,16 @@
             border-left-color: var(--warning);
         }
         
+        .device-info {
+            text-align: center;
+            padding: 10px;
+            background: rgba(77, 171, 247, 0.1);
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
         /* Mobile-specific optimizations */
         @media (max-width: 480px) {
             body {
@@ -599,7 +610,7 @@
                 <span>SelfChain</span>
             </div>
             <h1>Become Your Digital Signature</h1>
-            <p>Create a unique identity signature based on your typing patterns and mouse movements.</p>
+            <p>Create a unique identity signature based on your typing patterns and device interactions.</p>
             <p>Your behavioral biometrics become your personal key to digital identity verification.</p>
             <div class="button-group">
                 <button id="createIdentityBtn">Create My Identity</button>
@@ -609,7 +620,12 @@
         <!-- Enrollment Screen -->
         <div id="enrollScreen" class="screen">
             <h2>Create Your Identity</h2>
-            <p>Type the phrase below and move your mouse naturally in the box for 5 seconds.</p>
+            <p>Type the phrase below and interact with your device naturally for 5 seconds.</p>
+            
+            <div class="device-info" id="enrollDeviceInfo">
+                On desktop: Move your mouse in the box below<br>
+                On mobile: Touch and move your finger in the box
+            </div>
             
             <div class="fixed-phrase">This is me</div>
             
@@ -633,7 +649,12 @@
         <!-- Verification Screen -->
         <div id="verifyScreen" class="screen">
             <h2>Verify Your Identity</h2>
-            <p>Type the phrase below and move your mouse naturally in the box to verify your identity.</p>
+            <p>Type the phrase below and interact with your device to verify your identity.</p>
+            
+            <div class="device-info" id="verifyDeviceInfo">
+                On desktop: Move your mouse in the box below<br>
+                On mobile: Touch and move your finger in the box
+            </div>
             
             <div class="fixed-phrase">This is me</div>
             
@@ -701,6 +722,8 @@
         const verificationResult = document.getElementById('verificationResult');
         const backgroundDots = document.getElementById('backgroundDots');
         const notification = document.getElementById('notification');
+        const enrollDeviceInfo = document.getElementById('enrollDeviceInfo');
+        const verifyDeviceInfo = document.getElementById('verifyDeviceInfo');
         
         // State variables
         let storedSignature = null;
@@ -721,6 +744,7 @@
         const mouseThrottleTime = 16; // ms (60fps)
         let animationFrameId = null;
         const MAX_POINTS = 200; // Limit number of tracking points
+        let isTouchDevice = false;
 
         // Initialize background dots
         function initBackgroundDots() {
@@ -839,7 +863,7 @@
             return (matchCount / sig1.length) * 100;
         }
         
-        // Start mouse movement recording
+        // Start mouse/touch movement recording
         function startMouseRecording(verify = false) {
             const tracker = verify ? verifyMouseTracker : mouseTracker;
             const timer = verify ? verifyMouseTimer : mouseTimer;
@@ -860,16 +884,25 @@
                 tracker.removeChild(tracker.firstChild);
             }
             
-            // Animation frame-based mouse move handler
+            // Animation frame-based pointer move handler
             let lastX = 0, lastY = 0;
             
-            const handleMouseMove = (e) => {
+            const handlePointerMove = (e) => {
                 const now = Date.now();
                 if (now - lastMouseMoveTime < mouseThrottleTime) return;
                 
                 const rect = tracker.getBoundingClientRect();
-                const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
-                const y = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
+                let x, y;
+                
+                if (e.type.includes('mouse')) {
+                    x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
+                    y = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
+                } else {
+                    // Touch event
+                    const touch = e.touches[0];
+                    x = Math.max(0, Math.min(rect.width, touch.clientX - rect.left));
+                    y = Math.max(0, Math.min(rect.height, touch.clientY - rect.top));
+                }
                 
                 // Skip if position hasn't changed significantly
                 if (Math.abs(x - lastX) < 2 && Math.abs(y - lastY) < 2) return;
@@ -911,7 +944,12 @@
                 lastMouseMoveTime = now;
             };
             
-            tracker.addEventListener('mousemove', handleMouseMove);
+            // Add appropriate event listeners
+            if (isTouchDevice) {
+                tracker.addEventListener('touchmove', handlePointerMove);
+            } else {
+                tracker.addEventListener('mousemove', handlePointerMove);
+            }
             
             // Start timer
             const duration = 5000; // 5 seconds
@@ -928,7 +966,11 @@
                     if (elapsed >= duration) {
                         clearInterval(verifyMouseInterval);
                         verifyMouseRecording = false;
-                        tracker.removeEventListener('mousemove', handleMouseMove);
+                        if (isTouchDevice) {
+                            tracker.removeEventListener('touchmove', handlePointerMove);
+                        } else {
+                            tracker.removeEventListener('mousemove', handlePointerMove);
+                        }
                         if (animationFrameId) {
                             cancelAnimationFrame(animationFrameId);
                         }
@@ -946,7 +988,11 @@
                     if (elapsed >= duration) {
                         clearInterval(mouseInterval);
                         mouseRecording = false;
-                        tracker.removeEventListener('mousemove', handleMouseMove);
+                        if (isTouchDevice) {
+                            tracker.removeEventListener('touchmove', handlePointerMove);
+                        } else {
+                            tracker.removeEventListener('mousemove', handlePointerMove);
+                        }
                         if (animationFrameId) {
                             cancelAnimationFrame(animationFrameId);
                         }
@@ -992,16 +1038,9 @@
         // Complete enrollment process
         function completeEnrollment() {
             try {
-                // FIX: Added minimum data requirements
+                // FIX: Make mouse/touch data optional
                 if (phraseInput.value.length === 0) {
                     showNotification('Please type at least one character', 'error');
-                    resetEnrollment();
-                    showScreen(enrollScreen);
-                    return;
-                }
-                
-                if (mouseData.length < 10) {
-                    showNotification('Please move your mouse during enrollment', 'error');
                     resetEnrollment();
                     showScreen(enrollScreen);
                     return;
@@ -1034,15 +1073,9 @@
         // Complete verification process
         function completeVerification() {
             try {
-                // FIX: Added minimum data requirements
+                // FIX: Make mouse/touch data optional
                 if (verifyPhraseInput.value.length === 0) {
                     showNotification('Please type at least one character', 'error');
-                    resetVerification();
-                    return;
-                }
-                
-                if (verifyMouseData.length < 10) {
-                    showNotification('Please move your mouse during verification', 'error');
                     resetVerification();
                     return;
                 }
@@ -1165,7 +1198,7 @@
             
             analyzeTyping(phraseInput.value, targetPhrase, typingStartTime);
             
-            // Start mouse recording when user starts typing
+            // Start mouse/touch recording when user starts typing
             if (phraseInput.value.length === 1 && !mouseRecording) {
                 startMouseRecording();
             }
@@ -1203,6 +1236,15 @@
         // Check for existing identity on load
         window.addEventListener('DOMContentLoaded', () => {
             initBackgroundDots();
+            
+            // Detect touch device
+            isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            
+            // Update instructions based on device type
+            if (isTouchDevice) {
+                enrollDeviceInfo.innerHTML = 'Touch and move your finger in the box below';
+                verifyDeviceInfo.innerHTML = 'Touch and move your finger in the box below';
+            }
             
             if (localStorage.getItem('selfchain_signature')) {
                 showScreen(verifyScreen);
