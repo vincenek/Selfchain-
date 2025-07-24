@@ -18,6 +18,7 @@
             --text-secondary: #a0a0c0;
             --success: #51cf66;
             --error: #ff6b6b;
+            --warning: #fcc419;
             --easing: cubic-bezier(0.22, 0.61, 0.36, 1);
         }
         
@@ -85,8 +86,8 @@
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             width: 100%;
-            max-width: 650px;
-            padding: 30px;
+            max-width: 700px;
+            padding: 35px;
             position: relative;
             overflow: hidden;
             z-index: 10;
@@ -187,6 +188,7 @@
         
         .input-container {
             margin: 25px 0;
+            position: relative;
         }
         
         .fixed-phrase {
@@ -257,6 +259,13 @@
             max-width: 100%;
         }
         
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        
         button::before {
             content: '';
             position: absolute;
@@ -270,14 +279,14 @@
             transition: opacity 0.3s var(--easing);
         }
         
-        button:hover, button:active {
+        button:hover:not(:disabled), button:active:not(:disabled) {
             transform: translateY(-3px);
             color: #fff;
             border-color: rgba(77, 171, 247, 0.6);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
         
-        button:hover::before {
+        button:hover:not(:disabled)::before {
             opacity: 1;
         }
         
@@ -285,8 +294,8 @@
             border-color: rgba(156, 54, 181, 0.3);
         }
         
-        #resetBtn:hover, #resetAfterCreateBtn:hover,
-        #resetBtn:active, #resetAfterCreateBtn:active {
+        #resetBtn:hover:not(:disabled), #resetAfterCreateBtn:hover:not(:disabled),
+        #resetBtn:active:not(:disabled), #resetAfterCreateBtn:active:not(:disabled) {
             border-color: rgba(156, 54, 181, 0.6);
         }
         
@@ -449,6 +458,53 @@
             animation: pulse 2s infinite;
         }
         
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            background: var(--card-bg);
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(150%);
+            transition: transform 0.4s var(--easing);
+            z-index: 1000;
+            max-width: 350px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            border-left-color: var(--success);
+        }
+        
+        .notification.error {
+            border-left-color: var(--error);
+        }
+        
+        .notification.warning {
+            border-left-color: var(--warning);
+        }
+        
         /* Mobile-specific optimizations */
         @media (max-width: 480px) {
             body {
@@ -488,6 +544,13 @@
                 padding: 15px;
                 max-height: 120px;
             }
+            
+            .notification {
+                left: 15px;
+                right: 15px;
+                top: 15px;
+                max-width: none;
+            }
         }
         
         @media (max-width: 350px) {
@@ -524,6 +587,9 @@
 <body>
     <!-- Background dots -->
     <div class="background-dots" id="backgroundDots"></div>
+    
+    <!-- Notification system -->
+    <div class="notification" id="notification"></div>
     
     <div class="container">
         <!-- Intro Screen -->
@@ -633,6 +699,7 @@
         const signatureDisplay = document.getElementById('signatureDisplay');
         const verificationResult = document.getElementById('verificationResult');
         const backgroundDots = document.getElementById('backgroundDots');
+        const notification = document.getElementById('notification');
         
         // State variables
         let storedSignature = null;
@@ -649,7 +716,9 @@
         let typingStartTime = 0;
         let verifyTypingStartTime = 0;
         const targetPhrase = "This is me";
-        
+        let lastMouseMoveTime = 0;
+        const mouseThrottleTime = 20; // ms
+
         // Initialize background dots
         function initBackgroundDots() {
             const dotsCount = 80;
@@ -664,6 +733,22 @@
                 dot.style.height = dot.style.width;
                 backgroundDots.appendChild(dot);
             }
+        }
+        
+        // Show notification
+        function showNotification(message, type = '') {
+            notification.textContent = message;
+            notification.className = 'notification';
+            
+            if (type) {
+                notification.classList.add(type);
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
         }
         
         // Show specific screen
@@ -737,7 +822,7 @@
         
         // Calculate similarity between two signatures
         function calculateSimilarity(sig1, sig2) {
-            if (sig1.length !== sig2.length) return 0;
+            if (!sig1 || !sig2 || sig1.length !== sig2.length) return 0;
             
             let matchCount = 0;
             
@@ -771,8 +856,12 @@
                 tracker.removeChild(tracker.firstChild);
             }
             
-            // Add event listener for mouse movement
+            // Throttled mouse move handler
             const handleMouseMove = (e) => {
+                const now = Date.now();
+                if (now - lastMouseMoveTime < mouseThrottleTime) return;
+                lastMouseMoveTime = now;
+                
                 const rect = tracker.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
@@ -812,9 +901,7 @@
                         clearInterval(verifyMouseInterval);
                         verifyMouseRecording = false;
                         tracker.removeEventListener('mousemove', handleMouseMove);
-                        if (verify) {
-                            completeVerification();
-                        }
+                        completeVerification();
                     }
                 }, 50);
             } else {
@@ -870,72 +957,100 @@
         
         // Complete enrollment process
         function completeEnrollment() {
-            // Generate signature
-            storedSignature = generateSignature(typingData, mouseData);
-            
-            // Save to localStorage
-            localStorage.setItem('selfchain_signature', storedSignature);
-            
-            // Display signature
-            signatureDisplay.textContent = storedSignature;
-            
-            // Show identity created screen
-            showScreen(identityCreatedScreen);
+            try {
+                // Generate signature
+                storedSignature = generateSignature(typingData, mouseData);
+                
+                // Save to localStorage
+                localStorage.setItem('selfchain_signature', storedSignature);
+                
+                // Display signature
+                signatureDisplay.textContent = storedSignature;
+                
+                // Show identity created screen
+                showScreen(identityCreatedScreen);
+                showNotification('Identity created successfully!', 'success');
+            } catch (error) {
+                console.error('Enrollment error:', error);
+                showNotification('Failed to create identity. Please try again.', 'error');
+                showScreen(introScreen);
+            }
         }
         
         // Complete verification process
         function completeVerification() {
-            // Generate verification signature
-            const verifySignature = generateSignature(verifyTypingData, verifyMouseData);
-            
-            // Retrieve stored signature
-            const storedSig = localStorage.getItem('selfchain_signature');
-            
-            // Calculate similarity
-            const similarity = calculateSimilarity(storedSig, verifySignature);
-            
-            // Display result
-            verificationResult.textContent = `Similarity: ${similarity.toFixed(1)}%`;
-            
-            if (similarity >= 85) {
-                verificationResult.classList.add('success');
-                verificationResult.textContent = `✔ Access Granted (${similarity.toFixed(1)}% match)`;
-            } else {
-                verificationResult.classList.add('error');
-                verificationResult.textContent = `✖ Access Denied (${similarity.toFixed(1)}% match)`;
+            try {
+                // Generate verification signature
+                const verifySignature = generateSignature(verifyTypingData, verifyMouseData);
+                
+                // Retrieve stored signature
+                const storedSig = localStorage.getItem('selfchain_signature');
+                
+                if (!storedSig) {
+                    showNotification('No identity found. Please create one first.', 'warning');
+                    showScreen(introScreen);
+                    return;
+                }
+                
+                // Calculate similarity
+                const similarity = calculateSimilarity(storedSig, verifySignature);
+                
+                // Display result
+                verificationResult.textContent = `Similarity: ${similarity.toFixed(1)}%`;
+                
+                if (similarity >= 85) {
+                    verificationResult.classList.add('success');
+                    verificationResult.textContent = `✔ Access Granted (${similarity.toFixed(1)}% match)`;
+                    showNotification('Verification successful! Access granted.', 'success');
+                } else {
+                    verificationResult.classList.add('error');
+                    verificationResult.textContent = `✖ Access Denied (${similarity.toFixed(1)}% match)`;
+                    showNotification('Verification failed. Access denied.', 'error');
+                }
+                
+                // Show result with animation
+                setTimeout(() => {
+                    verificationResult.classList.add('show');
+                }, 10);
+            } catch (error) {
+                console.error('Verification error:', error);
+                showNotification('Verification failed. Please try again.', 'error');
+                resetVerification();
             }
-            
-            // Show result with animation
-            setTimeout(() => {
-                verificationResult.classList.add('show');
-            }, 10);
         }
         
         // Export signature
         function exportSignature() {
-            const storedSig = localStorage.getItem('selfchain_signature');
-            
-            if (!storedSig) {
-                alert('No identity signature found!');
-                return;
+            try {
+                const storedSig = localStorage.getItem('selfchain_signature');
+                
+                if (!storedSig) {
+                    showNotification('No identity signature found!', 'warning');
+                    return;
+                }
+                
+                const data = {
+                    signature: storedSig,
+                    timestamp: new Date().toISOString(),
+                    system: 'SelfChain Identity'
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `selfchain_identity_${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showNotification('Signature exported successfully!', 'success');
+            } catch (error) {
+                console.error('Export error:', error);
+                showNotification('Failed to export signature.', 'error');
             }
-            
-            const data = {
-                signature: storedSig,
-                timestamp: new Date().toISOString(),
-                system: 'SelfChain Identity'
-            };
-            
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `selfchain_identity_${new Date().toISOString().slice(0, 10)}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
         }
         
         // Reset identity
@@ -946,6 +1061,7 @@
                 resetEnrollment();
                 resetVerification();
                 showScreen(introScreen);
+                showNotification('Identity reset successfully.', 'success');
             }
         }
         
