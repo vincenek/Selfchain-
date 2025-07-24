@@ -480,30 +480,6 @@
             font-size: 0.9rem;
         }
         
-        /* About Section */
-        .about-content {
-            padding: 20px;
-            background: rgba(15, 23, 42, 0.3);
-            border-radius: 12px;
-            margin-top: 20px;
-            border: 1px solid var(--card-border);
-        }
-        
-        .feature-list {
-            margin-top: 20px;
-            padding-left: 20px;
-        }
-        
-        .feature-list li {
-            margin-bottom: 10px;
-            padding-left: 10px;
-        }
-        
-        .feature-list li i {
-            color: var(--secondary);
-            margin-right: 10px;
-        }
-        
         /* Responsive */
         @media (max-width: 900px) {
             .app-content {
@@ -683,44 +659,6 @@
                     </div>
                 </div>
                 
-                <!-- About Screen -->
-                <div id="aboutScreen" class="screen">
-                    <div class="section-title">
-                        <i class="fas fa-info-circle"></i>
-                        <h1>About SelfChain</h1>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Advanced Behavioral Biometrics</h2>
-                        </div>
-                        <p>SelfChain uses cutting-edge technology to create a unique identity signature based on your individual behavioral patterns.</p>
-                        
-                        <div class="about-content">
-                            <h3>How It Works</h3>
-                            <p>When you create your identity, SelfChain records:</p>
-                            <ul class="feature-list">
-                                <li><i class="fas fa-keyboard"></i> Your unique typing rhythm and cadence</li>
-                                <li><i class="fas fa-mouse-pointer"></i> Your natural movement patterns (mouse or touch)</li>
-                                <li><i class="fas fa-lock"></i> Combined data points that form your behavioral fingerprint</li>
-                            </ul>
-                            
-                            <h3>Security Features</h3>
-                            <ul class="feature-list">
-                                <li><i class="fas fa-shield-alt"></i> 256-bit encryption of your behavioral signature</li>
-                                <li><i class="fas fa-user-secret"></i> Data never leaves your device</li>
-                                <li><i class="fas fa-bolt"></i> Real-time verification with 98% accuracy</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="btn-group">
-                        <button id="backToDashboardBtn" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Back to Dashboard
-                        </button>
-                    </div>
-                </div>
-                
                 <!-- Enrollment Screen -->
                 <div id="enrollScreen" class="screen">
                     <div class="section-title">
@@ -878,14 +816,11 @@
     <script>
         // DOM Elements
         const introScreen = document.getElementById('introScreen');
-        const aboutScreen = document.getElementById('aboutScreen');
         const enrollScreen = document.getElementById('enrollScreen');
         const verifyScreen = document.getElementById('verifyScreen');
         const identityCreatedScreen = document.getElementById('identityCreatedScreen');
         const createIdentityBtn = document.getElementById('createIdentityBtn');
         const learnMoreBtn = document.getElementById('learnMoreBtn');
-        const backToDashboardBtn = document.getElementById('backToDashboardBtn');
-        const helpBtn = document.getElementById('helpBtn');
         const cancelEnrollBtn = document.getElementById('cancelEnrollBtn');
         const generateSignatureBtn = document.getElementById('generateSignatureBtn');
         const verifyBtn = document.getElementById('verifyBtn');
@@ -905,6 +840,7 @@
         const verifyMouseProgress = document.getElementById('verifyMouseProgress');
         const signatureDisplay = document.getElementById('signatureDisplay');
         const verificationResult = document.getElementById('verificationResult');
+        const helpBtn = document.getElementById('helpBtn');
         const navLinks = document.querySelectorAll('.nav-link');
         
         // State variables
@@ -942,7 +878,7 @@
         // Show specific screen
         function showScreen(screen) {
             // Hide all screens
-            [introScreen, aboutScreen, enrollScreen, verifyScreen, identityCreatedScreen].forEach(s => {
+            [introScreen, enrollScreen, verifyScreen, identityCreatedScreen].forEach(s => {
                 s.classList.remove('active');
             });
             
@@ -1116,7 +1052,6 @@
                         verifyMouseRecording = false;
                         tracker.removeEventListener('mousemove', handleMouseMove);
                         tracker.removeEventListener('touchmove', handleTouchMove);
-                        completeVerification();
                     }
                 }, 50);
             } else {
@@ -1339,13 +1274,6 @@
         learnMoreBtn.addEventListener('click', () => {
             // Update navigation
             navLinks.forEach(link => link.classList.remove('active'));
-            showScreen(aboutScreen);
-        });
-        
-        backToDashboardBtn.addEventListener('click', () => {
-            // Update navigation
-            navLinks.forEach(link => link.classList.remove('active'));
-            document.querySelector('[data-target="introScreen"]').classList.add('active');
             showScreen(introScreen);
         });
         
@@ -1401,6 +1329,8 @@
                 if (!verifyMouseRecording) {
                     resetVerification();
                     startMovementRecording(true);
+                } else {
+                    completeVerification();
                 }
             });
         }
