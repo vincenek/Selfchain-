@@ -19,7 +19,6 @@
             --card-border: #334155;
             --text: #f1f5f9;
             --text-muted: #94a3b8;
-            --sidebar: #0c1221;
         }
         
         * {
@@ -41,16 +40,19 @@
         
         /* Layout */
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             width: 100%;
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
         .app-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             padding: 20px;
             background: var(--card-bg);
@@ -69,39 +71,12 @@
         }
         
         .logo-text {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-        }
-        
-        .nav-controls {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .app-content {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 25px;
-            margin-top: 30px;
-        }
-        
-        .sidebar {
-            background: var(--sidebar);
-            border-radius: 16px;
-            padding: 25px;
-            height: fit-content;
-        }
-        
-        .main-content {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 30px;
-            border: 1px solid var(--card-border);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
         
         /* Typography */
@@ -113,6 +88,7 @@
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-align: center;
         }
         
         h2 {
@@ -120,6 +96,7 @@
             margin-bottom: 20px;
             font-weight: 600;
             color: var(--text);
+            text-align: center;
         }
         
         h3 {
@@ -133,15 +110,16 @@
             margin-bottom: 20px;
             line-height: 1.6;
             color: var(--text-muted);
+            text-align: center;
         }
         
         .section-title {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
             margin-bottom: 25px;
             padding-bottom: 10px;
-            border-bottom: 1px solid var(--card-border);
         }
         
         .section-title i {
@@ -155,11 +133,12 @@
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
         
         .card-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             margin-bottom: 20px;
         }
@@ -174,12 +153,15 @@
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 12px 24px;
-            font-size: 1rem;
+            padding: 14px 28px;
+            font-size: 1.1rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
+            margin: 10px;
+            width: 100%;
+            max-width: 300px;
         }
         
         .btn:hover {
@@ -189,7 +171,7 @@
         }
         
         .btn i {
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
         
         .btn-secondary {
@@ -214,20 +196,24 @@
         }
         
         .btn-sm {
-            padding: 8px 16px;
-            font-size: 0.9rem;
+            padding: 10px 20px;
+            font-size: 1rem;
         }
         
         .btn-group {
             display: flex;
-            gap: 12px;
-            margin-top: 20px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
         }
         
         /* Form Elements */
         .input-group {
             margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .input-label {
@@ -235,10 +221,12 @@
             margin-bottom: 8px;
             font-weight: 500;
             color: var(--text);
+            text-align: center;
         }
         
         input {
             width: 100%;
+            max-width: 400px;
             padding: 14px;
             border: 1px solid var(--card-border);
             border-radius: 8px;
@@ -246,6 +234,7 @@
             color: var(--text);
             font-size: 1rem;
             font-family: 'Roboto Mono', monospace;
+            text-align: center;
         }
         
         input:focus {
@@ -265,11 +254,17 @@
             font-size: 1.3rem;
             color: var(--secondary);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         /* Tracker */
         .tracker-container {
             margin: 30px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .tracker-header {
@@ -277,26 +272,30 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
+            width: 100%;
+            max-width: 500px;
         }
         
         .timer {
             font-family: 'Roboto Mono', monospace;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--text);
             background: rgba(15, 23, 42, 0.5);
-            padding: 6px 12px;
+            padding: 8px 16px;
             border-radius: 6px;
             border: 1px solid var(--card-border);
         }
         
         .progress-container {
             margin: 15px 0;
+            width: 100%;
+            max-width: 500px;
         }
         
         .progress-bar {
-            height: 8px;
+            height: 10px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+            border-radius: 5px;
             overflow: hidden;
         }
         
@@ -309,6 +308,8 @@
         
         .tracker-box {
             height: 250px;
+            width: 100%;
+            max-width: 500px;
             border: 1px dashed var(--card-border);
             border-radius: 12px;
             position: relative;
@@ -335,25 +336,30 @@
         
         .tracker-path {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             background: var(--secondary);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             pointer-events: none;
             z-index: 10;
-            box-shadow: 0 0 8px rgba(76, 201, 240, 0.7);
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.8);
         }
         
         /* Mobile specific */
         .device-notice {
-            display: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: rgba(243, 156, 18, 0.1);
             border: 1px solid var(--warning);
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 20px;
             font-size: 0.9rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .device-notice i {
@@ -369,6 +375,9 @@
             border-radius: 12px;
             background: rgba(15, 23, 42, 0.5);
             border: 1px solid var(--card-border);
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .result-icon {
@@ -407,36 +416,9 @@
             font-size: 0.9rem;
             max-height: 200px;
             overflow-y: auto;
-        }
-        
-        /* Navigation */
-        .nav-menu {
-            list-style: none;
-        }
-        
-        .nav-item {
-            margin-bottom: 10px;
-        }
-        
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 15px;
-            border-radius: 8px;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-link:hover, .nav-link.active {
-            background: rgba(67, 97, 238, 0.1);
-            color: var(--text);
-        }
-        
-        .nav-link i {
-            width: 20px;
-            text-align: center;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         /* Footer */
@@ -480,62 +462,20 @@
             font-size: 0.9rem;
         }
         
-        /* About Section */
-        .about-content {
-            padding: 20px;
-            background: rgba(15, 23, 42, 0.3);
-            border-radius: 12px;
-            margin-top: 20px;
-            border: 1px solid var(--card-border);
-        }
-        
-        .feature-list {
-            margin-top: 20px;
-            padding-left: 20px;
-        }
-        
-        .feature-list li {
-            margin-bottom: 10px;
-            padding-left: 10px;
-        }
-        
-        .feature-list li i {
-            color: var(--secondary);
-            margin-right: 10px;
-        }
-        
         /* Responsive */
-        @media (max-width: 900px) {
-            .app-content {
-                grid-template-columns: 1fr;
+        @media (min-width: 768px) {
+            .btn-group {
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
             }
             
-            .sidebar {
-                display: none;
-            }
-            
-            .container {
-                padding: 15px;
-            }
-            
-            .app-header {
-                padding: 15px;
+            .btn {
+                width: auto;
             }
         }
         
         @media (max-width: 600px) {
-            .btn-group {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
             h1 {
                 font-size: 1.8rem;
             }
@@ -543,10 +483,6 @@
             .fixed-phrase {
                 font-size: 1.1rem;
                 padding: 15px;
-            }
-            
-            .device-notice {
-                display: flex;
             }
             
             .tracker-box {
@@ -576,294 +512,285 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* Background */
+        .background-dots {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+            overflow: hidden;
+        }
+        
+        .dot {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(20vw);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Background dots -->
+    <div class="background-dots" id="backgroundDots"></div>
+    
     <header class="app-header">
         <div class="logo">
             <i class="fas fa-fingerprint logo-icon"></i>
             <span class="logo-text">SelfChain</span>
         </div>
-        <div class="nav-controls">
-            <button class="btn btn-sm btn-secondary" id="helpBtn">
-                <i class="fas fa-question-circle"></i> Help
-            </button>
-        </div>
     </header>
     
     <div class="container">
-        <div class="app-content">
-            <aside class="sidebar">
-                <h3>Identity Management</h3>
-                <ul class="nav-menu">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link active" data-target="introScreen">
-                            <i class="fas fa-home"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" data-target="enrollScreen">
-                            <i class="fas fa-id-card"></i> Create Identity
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" data-target="verifyScreen">
-                            <i class="fas fa-user-check"></i> Verify Identity
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" data-target="identityCreatedScreen">
-                            <i class="fas fa-key"></i> My Signature
-                        </a>
-                    </li>
-                </ul>
-                
-                <div class="card" style="margin-top: 30px;">
-                    <h3>Security Status</h3>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-value">98%</div>
-                            <div class="stat-label">Accuracy</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">256-bit</div>
-                            <div class="stat-label">Encryption</div>
-                        </div>
-                    </div>
-                    <p>Your behavioral data is stored securely on your device and never leaves your browser.</p>
-                </div>
-            </aside>
+        <!-- Mobile notice -->
+        <div class="device-notice">
+            <i class="fas fa-mobile-alt"></i>
+            <span>For best results, use your finger to create movement patterns on mobile devices</span>
+        </div>
+        
+        <!-- Intro Screen -->
+        <div id="introScreen" class="screen active">
+            <div class="section-title">
+                <i class="fas fa-home"></i>
+                <h1>Behavioral Identity Verification</h1>
+            </div>
             
-            <main class="main-content">
-                <!-- Mobile notice -->
-                <div class="device-notice">
-                    <i class="fas fa-mobile-alt"></i>
-                    <span>For best results, use your finger to create movement patterns on mobile devices</span>
+            <p>SelfChain creates a unique digital identity based on your typing patterns and movement behavior. This biometric signature becomes your personal key for secure authentication.</p>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>How It Works</h2>
                 </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-keyboard fa-2x" style="color: #4cc9f0; margin-bottom: 15px;"></i>
+                        <h3>Typing Pattern</h3>
+                        <p>We measure the unique rhythm of your keystrokes</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-mobile-alt fa-2x" style="color: #4361ee; margin-bottom: 15px;"></i>
+                        <h3>Movement Behavior</h3>
+                        <p>We analyze your natural movement patterns</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-fingerprint fa-2x" style="color: #2ecc71; margin-bottom: 15px;"></i>
+                        <h3>Unique Signature</h3>
+                        <p>Combined data creates your behavioral identity</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button id="createIdentityBtn" class="btn">
+                    <i class="fas fa-id-card"></i> Create Identity
+                </button>
+                <button id="learnMoreBtn" class="btn btn-secondary">
+                    <i class="fas fa-book"></i> Learn More
+                </button>
+            </div>
+        </div>
+        
+        <!-- About Screen -->
+        <div id="aboutScreen" class="screen">
+            <div class="section-title">
+                <i class="fas fa-info-circle"></i>
+                <h1>About SelfChain</h1>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Advanced Behavioral Biometrics</h2>
+                </div>
+                <p>SelfChain uses cutting-edge technology to create a unique identity signature based on your individual behavioral patterns.</p>
                 
-                <!-- Intro Screen -->
-                <div id="introScreen" class="screen active">
-                    <div class="section-title">
-                        <i class="fas fa-home"></i>
-                        <h1>Behavioral Identity Verification</h1>
+                <div class="card">
+                    <h3>How It Works</h3>
+                    <p>When you create your identity, SelfChain records:</p>
+                    <ul style="list-style: none; padding-left: 20px;">
+                        <li style="margin-bottom: 15px;"><i class="fas fa-keyboard" style="color: var(--secondary); margin-right: 10px;"></i> Your unique typing rhythm and cadence</li>
+                        <li style="margin-bottom: 15px;"><i class="fas fa-mouse-pointer" style="color: var(--secondary); margin-right: 10px;"></i> Your natural movement patterns (mouse or touch)</li>
+                        <li style="margin-bottom: 15px;"><i class="fas fa-lock" style="color: var(--secondary); margin-right: 10px;"></i> Combined data points that form your behavioral fingerprint</li>
+                    </ul>
+                    
+                    <h3>Security Features</h3>
+                    <ul style="list-style: none; padding-left: 20px;">
+                        <li style="margin-bottom: 15px;"><i class="fas fa-shield-alt" style="color: var(--secondary); margin-right: 10px;"></i> 256-bit encryption of your behavioral signature</li>
+                        <li style="margin-bottom: 15px;"><i class="fas fa-user-secret" style="color: var(--secondary); margin-right: 10px;"></i> Data never leaves your device</li>
+                        <li style="margin-bottom: 15px;"><i class="fas fa-bolt" style="color: var(--secondary); margin-right: 10px;"></i> Real-time verification with 98% accuracy</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button id="backToDashboardBtn" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+            </div>
+        </div>
+        
+        <!-- Enrollment Screen -->
+        <div id="enrollScreen" class="screen">
+            <div class="section-title">
+                <i class="fas fa-id-card"></i>
+                <h1>Create Your Identity</h1>
+            </div>
+            
+            <p>Create your unique behavioral signature by completing the following steps:</p>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Step 1: Type the Passphrase</h2>
+                </div>
+                <div class="fixed-phrase">This is me</div>
+                <div class="input-group">
+                    <label class="input-label">Type the phrase exactly as shown:</label>
+                    <input type="text" id="phraseInput" placeholder="Type 'This is me' to begin" autocomplete="off">
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Step 2: Movement Pattern</h2>
+                </div>
+                <div class="tracker-container">
+                    <div class="tracker-header">
+                        <h3>Move your cursor/finger naturally in the box below</h3>
+                        <div class="timer" id="mouseTimer">5.0s</div>
                     </div>
-                    
-                    <p>SelfChain creates a unique digital identity based on your typing patterns and movement behavior. This biometric signature becomes your personal key for secure authentication.</p>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>How It Works</h2>
-                        </div>
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <i class="fas fa-keyboard fa-2x" style="color: #4cc9f0; margin-bottom: 15px;"></i>
-                                <h3>Typing Pattern</h3>
-                                <p>We measure the unique rhythm of your keystrokes</p>
-                            </div>
-                            <div class="stat-card">
-                                <i class="fas fa-mobile-alt fa-2x" style="color: #4361ee; margin-bottom: 15px;"></i>
-                                <h3>Movement Behavior</h3>
-                                <p>We analyze your natural movement patterns</p>
-                            </div>
-                            <div class="stat-card">
-                                <i class="fas fa-fingerprint fa-2x" style="color: #2ecc71; margin-bottom: 15px;"></i>
-                                <h3>Unique Signature</h3>
-                                <p>Combined data creates your behavioral identity</p>
-                            </div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress" id="mouseProgress"></div>
                         </div>
                     </div>
-                    
-                    <div class="btn-group">
-                        <button id="createIdentityBtn" class="btn">
-                            <i class="fas fa-id-card"></i> Create Identity
-                        </button>
-                        <button id="learnMoreBtn" class="btn btn-secondary">
-                            <i class="fas fa-book"></i> Learn More
-                        </button>
+                    <div class="tracker-box" id="mouseTracker">
+                        <div class="tracker-instructions">Move your cursor or finger in this area</div>
                     </div>
                 </div>
-                
-                <!-- About Screen -->
-                <div id="aboutScreen" class="screen">
-                    <div class="section-title">
-                        <i class="fas fa-info-circle"></i>
-                        <h1>About SelfChain</h1>
+            </div>
+            
+            <div class="btn-group">
+                <button id="cancelEnrollBtn" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            </div>
+        </div>
+        
+        <!-- Verification Screen -->
+        <div id="verifyScreen" class="screen">
+            <div class="section-title">
+                <i class="fas fa-user-check"></i>
+                <h1>Verify Your Identity</h1>
+            </div>
+            
+            <p>Verify your identity by recreating your behavioral signature.</p>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Step 1: Type the Passphrase</h2>
+                </div>
+                <div class="fixed-phrase">This is me</div>
+                <div class="input-group">
+                    <label class="input-label">Type the phrase exactly as shown:</label>
+                    <input type="text" id="verifyPhraseInput" placeholder="Type 'This is me' to verify" autocomplete="off">
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Step 2: Movement Pattern</h2>
+                </div>
+                <div class="tracker-container">
+                    <div class="tracker-header">
+                        <h3>Move your cursor/finger naturally in the box below</h3>
+                        <div class="timer" id="verifyMouseTimer">5.0s</div>
                     </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Advanced Behavioral Biometrics</h2>
-                        </div>
-                        <p>SelfChain uses cutting-edge technology to create a unique identity signature based on your individual behavioral patterns.</p>
-                        
-                        <div class="about-content">
-                            <h3>How It Works</h3>
-                            <p>When you create your identity, SelfChain records:</p>
-                            <ul class="feature-list">
-                                <li><i class="fas fa-keyboard"></i> Your unique typing rhythm and cadence</li>
-                                <li><i class="fas fa-mouse-pointer"></i> Your natural movement patterns (mouse or touch)</li>
-                                <li><i class="fas fa-lock"></i> Combined data points that form your behavioral fingerprint</li>
-                            </ul>
-                            
-                            <h3>Security Features</h3>
-                            <ul class="feature-list">
-                                <li><i class="fas fa-shield-alt"></i> 256-bit encryption of your behavioral signature</li>
-                                <li><i class="fas fa-user-secret"></i> Data never leaves your device</li>
-                                <li><i class="fas fa-bolt"></i> Real-time verification with 98% accuracy</li>
-                            </ul>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress" id="verifyMouseProgress"></div>
                         </div>
                     </div>
-                    
-                    <div class="btn-group">
-                        <button id="backToDashboardBtn" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Back to Dashboard
-                        </button>
+                    <div class="tracker-box" id="verifyMouseTracker">
+                        <div class="tracker-instructions">Move your cursor or finger in this area</div>
                     </div>
                 </div>
-                
-                <!-- Enrollment Screen -->
-                <div id="enrollScreen" class="screen">
-                    <div class="section-title">
-                        <i class="fas fa-id-card"></i>
-                        <h1>Create Your Identity</h1>
-                    </div>
-                    
-                    <p>Create your unique behavioral signature by completing the following steps:</p>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Step 1: Type the Passphrase</h2>
-                        </div>
-                        <div class="fixed-phrase">This is me</div>
-                        <div class="input-group">
-                            <label class="input-label">Type the phrase exactly as shown:</label>
-                            <input type="text" id="phraseInput" placeholder="Type 'This is me' to begin" autocomplete="off">
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Step 2: Movement Pattern</h2>
-                        </div>
-                        <div class="tracker-container">
-                            <div class="tracker-header">
-                                <h3>Move your cursor/finger naturally in the box below</h3>
-                                <div class="timer" id="mouseTimer">5.0s</div>
-                            </div>
-                            <div class="progress-container">
-                                <div class="progress-bar">
-                                    <div class="progress" id="mouseProgress"></div>
-                                </div>
-                            </div>
-                            <div class="tracker-box" id="mouseTracker">
-                                <div class="tracker-instructions">Move your cursor or finger in this area</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="btn-group">
-                        <button id="cancelEnrollBtn" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Back
-                        </button>
-                    </div>
+            </div>
+            
+            <div id="verificationResult" class="result-container">
+                <!-- Results will be displayed here -->
+            </div>
+            
+            <div class="btn-group">
+                <button id="verifyBtn" class="btn">
+                    <i class="fas fa-check-circle"></i> Verify Identity
+                </button>
+                <button id="resetBtn" class="btn btn-error">
+                    <i class="fas fa-trash-alt"></i> Reset Identity
+                </button>
+                <button id="exportBtn" class="btn btn-secondary">
+                    <i class="fas fa-download"></i> Export Signature
+                </button>
+            </div>
+        </div>
+        
+        <!-- Identity Created Screen -->
+        <div id="identityCreatedScreen" class="screen">
+            <div class="section-title">
+                <i class="fas fa-key"></i>
+                <h1>Your Digital Identity</h1>
+            </div>
+            
+            <div class="result-container success">
+                <i class="fas fa-check-circle result-icon"></i>
+                <h2 class="result-title">Identity Created Successfully</h2>
+                <p class="result-text">Your unique behavioral signature has been generated and stored securely on this device.</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Your Behavioral Signature</h2>
+                    <button id="copySignatureBtn" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
                 </div>
-                
-                <!-- Verification Screen -->
-                <div id="verifyScreen" class="screen">
-                    <div class="section-title">
-                        <i class="fas fa-user-check"></i>
-                        <h1>Verify Your Identity</h1>
-                    </div>
-                    
-                    <p>Verify your identity by recreating your behavioral signature.</p>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Step 1: Type the Passphrase</h2>
-                        </div>
-                        <div class="fixed-phrase">This is me</div>
-                        <div class="input-group">
-                            <label class="input-label">Type the phrase exactly as shown:</label>
-                            <input type="text" id="verifyPhraseInput" placeholder="Type 'This is me' to verify" autocomplete="off">
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Step 2: Movement Pattern</h2>
-                        </div>
-                        <div class="tracker-container">
-                            <div class="tracker-header">
-                                <h3>Move your cursor/finger naturally in the box below</h3>
-                                <div class="timer" id="verifyMouseTimer">5.0s</div>
-                            </div>
-                            <div class="progress-container">
-                                <div class="progress-bar">
-                                    <div class="progress" id="verifyMouseProgress"></div>
-                                </div>
-                            </div>
-                            <div class="tracker-box" id="verifyMouseTracker">
-                                <div class="tracker-instructions">Move your cursor or finger in this area</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="verificationResult" class="result-container">
-                        <!-- Results will be displayed here -->
-                    </div>
-                    
-                    <div class="btn-group">
-                        <button id="verifyBtn" class="btn">
-                            <i class="fas fa-check-circle"></i> Verify Identity
-                        </button>
-                        <button id="resetBtn" class="btn btn-error">
-                            <i class="fas fa-trash-alt"></i> Reset Identity
-                        </button>
-                        <button id="exportBtn" class="btn btn-secondary">
-                            <i class="fas fa-download"></i> Export Signature
-                        </button>
-                    </div>
+                <div class="signature-display" id="signatureDisplay">
+                    <!-- Signature will be displayed here -->
                 </div>
-                
-                <!-- Identity Created Screen -->
-                <div id="identityCreatedScreen" class="screen">
-                    <div class="section-title">
-                        <i class="fas fa-key"></i>
-                        <h1>Your Digital Identity</h1>
-                    </div>
-                    
-                    <div class="result-container success">
-                        <i class="fas fa-check-circle result-icon"></i>
-                        <h2 class="result-title">Identity Created Successfully</h2>
-                        <p class="result-text">Your unique behavioral signature has been generated and stored securely on this device.</p>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Your Behavioral Signature</h2>
-                            <button id="copySignatureBtn" class="btn btn-sm btn-secondary">
-                                <i class="fas fa-copy"></i> Copy
-                            </button>
-                        </div>
-                        <div class="signature-display" id="signatureDisplay">
-                            <!-- Signature will be displayed here -->
-                        </div>
-                        <p>This unique identifier is generated from your typing rhythm and movement patterns. It's stored locally on this device and never transmitted to any server.</p>
-                    </div>
-                    
-                    <div class="btn-group">
-                        <button id="goToVerifyBtn" class="btn">
-                            <i class="fas fa-user-check"></i> Verify Identity
-                        </button>
-                        <button id="exportAfterCreateBtn" class="btn btn-secondary">
-                            <i class="fas fa-download"></i> Export Signature
-                        </button>
-                        <button id="resetAfterCreateBtn" class="btn btn-error">
-                            <i class="fas fa-trash-alt"></i> Reset Identity
-                        </button>
-                    </div>
-                </div>
-            </main>
+                <p>This unique identifier is generated from your typing rhythm and movement patterns. It's stored locally on this device and never transmitted to any server.</p>
+            </div>
+            
+            <div class="btn-group">
+                <button id="goToVerifyBtn" class="btn">
+                    <i class="fas fa-user-check"></i> Verify Identity
+                </button>
+                <button id="exportAfterCreateBtn" class="btn btn-secondary">
+                    <i class="fas fa-download"></i> Export Signature
+                </button>
+                <button id="resetAfterCreateBtn" class="btn btn-error">
+                    <i class="fas fa-trash-alt"></i> Reset Identity
+                </button>
+            </div>
         </div>
     </div>
     
@@ -882,7 +809,6 @@
         const createIdentityBtn = document.getElementById('createIdentityBtn');
         const learnMoreBtn = document.getElementById('learnMoreBtn');
         const backToDashboardBtn = document.getElementById('backToDashboardBtn');
-        const helpBtn = document.getElementById('helpBtn');
         const cancelEnrollBtn = document.getElementById('cancelEnrollBtn');
         const verifyBtn = document.getElementById('verifyBtn');
         const resetBtn = document.getElementById('resetBtn');
@@ -901,9 +827,10 @@
         const verifyMouseProgress = document.getElementById('verifyMouseProgress');
         const signatureDisplay = document.getElementById('signatureDisplay');
         const verificationResult = document.getElementById('verificationResult');
-        const navLinks = document.querySelectorAll('.nav-link');
+        const backgroundDots = document.getElementById('backgroundDots');
         
         // State variables
+        let storedSignature = null;
         let mouseData = [];
         let typingData = [];
         let verifyMouseData = [];
@@ -918,31 +845,29 @@
         let verifyTypingStartTime = 0;
         const targetPhrase = "This is me";
         
-        // Navigation
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetScreen = document.getElementById(link.dataset.target);
-                
-                // Reset states when navigating
-                resetEnrollment();
-                resetVerification();
-                
-                navLinks.forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-                
-                showScreen(targetScreen);
-            });
-        });
+        // Initialize background dots
+        function initBackgroundDots() {
+            const dotsCount = 50;
+            for (let i = 0; i < dotsCount; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                dot.style.left = `${Math.random() * 100}%`;
+                dot.style.top = `${Math.random() * 100}%`;
+                dot.style.animationDelay = `${Math.random() * 15}s`;
+                dot.style.width = `${2 + Math.random() * 3}px`;
+                dot.style.height = dot.style.width;
+                backgroundDots.appendChild(dot);
+            }
+        }
         
         // Show specific screen
         function showScreen(screen) {
-            // Hide all screens
-            [introScreen, aboutScreen, enrollScreen, verifyScreen, identityCreatedScreen].forEach(s => {
-                s.classList.remove('active');
-            });
+            introScreen.classList.remove('active');
+            aboutScreen.classList.remove('active');
+            enrollScreen.classList.remove('active');
+            verifyScreen.classList.remove('active');
+            identityCreatedScreen.classList.remove('active');
             
-            // Show the requested screen
             screen.classList.add('active');
         }
         
@@ -1169,32 +1094,14 @@
         
         // Complete enrollment process
         function completeEnrollment() {
-            // Validate the typed phrase
-            if (phraseInput.value !== targetPhrase) {
-                alert('Please type the phrase exactly as shown: "This is me"');
-                resetEnrollment();
-                return;
-            }
-            
-            // Validate we have both typing and mouse data
-            if (typingData.length === 0 || mouseData.length === 0) {
-                alert('Please complete both typing and movement steps');
-                resetEnrollment();
-                return;
-            }
-
             // Generate signature
-            const signature = generateSignature(typingData, mouseData);
+            storedSignature = generateSignature(typingData, mouseData);
             
             // Save to localStorage
-            localStorage.setItem('selfchain_signature', signature);
+            localStorage.setItem('selfchain_signature', storedSignature);
             
             // Display signature
-            signatureDisplay.textContent = signature;
-            
-            // Update navigation
-            navLinks.forEach(link => link.classList.remove('active'));
-            document.querySelector('[data-target="identityCreatedScreen"]').classList.add('active');
+            signatureDisplay.textContent = storedSignature;
             
             // Show identity created screen
             showScreen(identityCreatedScreen);
@@ -1284,30 +1191,16 @@
         function resetIdentity() {
             if (confirm('Are you sure you want to reset your identity? This will delete your stored signature and cannot be undone.')) {
                 localStorage.removeItem('selfchain_signature');
+                storedSignature = null;
                 resetEnrollment();
                 resetVerification();
-                
-                // Update navigation
-                navLinks.forEach(link => link.classList.remove('active'));
-                document.querySelector('[data-target="introScreen"]').classList.add('active');
-                
                 showScreen(introScreen);
             }
-        }
-        
-        // Show help information
-        function showHelp() {
-            alert("SelfChain Help:\n\n1. Create Identity: Establish your unique behavioral signature\n2. Verify Identity: Confirm your identity using your behavior\n3. Reset Identity: Delete your stored signature\n4. Export: Save your signature for backup");
         }
         
         // Event Listeners
         createIdentityBtn.addEventListener('click', () => {
             resetEnrollment();
-            
-            // Update navigation
-            navLinks.forEach(link => link.classList.remove('active'));
-            document.querySelector('[data-target="enrollScreen"]').classList.add('active');
-            
             showScreen(enrollScreen);
             setTimeout(() => {
                 if (phraseInput) phraseInput.focus();
@@ -1315,27 +1208,15 @@
         });
         
         learnMoreBtn.addEventListener('click', () => {
-            // Update navigation
-            navLinks.forEach(link => link.classList.remove('active'));
             showScreen(aboutScreen);
         });
         
         backToDashboardBtn.addEventListener('click', () => {
-            // Update navigation
-            navLinks.forEach(link => link.classList.remove('active'));
-            document.querySelector('[data-target="introScreen"]').classList.add('active');
             showScreen(introScreen);
         });
         
-        helpBtn.addEventListener('click', showHelp);
-        
         cancelEnrollBtn.addEventListener('click', () => {
             resetEnrollment();
-            
-            // Update navigation
-            navLinks.forEach(link => link.classList.remove('active'));
-            document.querySelector('[data-target="introScreen"]').classList.add('active');
-            
             showScreen(introScreen);
         });
         
@@ -1389,11 +1270,6 @@
         if (goToVerifyBtn) {
             goToVerifyBtn.addEventListener('click', () => {
                 resetVerification();
-                
-                // Update navigation
-                navLinks.forEach(link => link.classList.remove('active'));
-                document.querySelector('[data-target="verifyScreen"]').classList.add('active');
-                
                 showScreen(verifyScreen);
             });
         }
@@ -1404,11 +1280,9 @@
         
         // Check for existing identity on load
         window.addEventListener('DOMContentLoaded', () => {
+            initBackgroundDots();
+            
             if (localStorage.getItem('selfchain_signature')) {
-                // Update navigation
-                navLinks.forEach(link => link.classList.remove('active'));
-                document.querySelector('[data-target="verifyScreen"]').classList.add('active');
-                
                 showScreen(verifyScreen);
             } else {
                 showScreen(introScreen);
