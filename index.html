@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="SelfChain - Create a unique digital identity based on your behavioral biometrics">
     <title>SelfChain: Become Your Digital Signature</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔒</text></svg>">
     <style>
         :root {
             --primary: #4dabf7;
@@ -23,6 +25,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
@@ -36,16 +39,18 @@
             overflow: hidden;
             position: relative;
             line-height: 1.6;
+            padding: 20px;
         }
         
         .background-dots {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
             opacity: 0.15;
+            pointer-events: none;
         }
         
         .dot {
@@ -79,9 +84,9 @@
             background: var(--card-bg);
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            width: 90%;
+            width: 100%;
             max-width: 650px;
-            padding: 40px;
+            padding: 30px;
             position: relative;
             overflow: hidden;
             z-index: 10;
@@ -127,7 +132,7 @@
         }
         
         h1 {
-            font-size: 2.8rem;
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
             color: var(--primary);
             margin-bottom: 15px;
             text-shadow: 0 0 15px rgba(77, 171, 247, 0.4);
@@ -150,7 +155,7 @@
         }
         
         h2 {
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 4vw, 2rem);
             color: var(--text);
             margin-bottom: 30px;
             font-weight: 600;
@@ -173,7 +178,7 @@
         p {
             text-align: center;
             margin-bottom: 25px;
-            font-size: 1.1rem;
+            font-size: clamp(0.95rem, 3vw, 1.1rem);
             color: var(--text-secondary);
             max-width: 90%;
             margin-left: auto;
@@ -191,17 +196,12 @@
             padding: 18px;
             margin: 25px 0;
             text-align: center;
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
             letter-spacing: 1px;
             color: var(--primary);
             font-weight: 500;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.3s var(--easing);
-        }
-        
-        .fixed-phrase:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
         
         input {
@@ -211,7 +211,7 @@
             border-radius: 10px;
             background: rgba(30, 30, 46, 0.8);
             color: var(--text);
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 3.5vw, 1.2rem);
             text-align: center;
             outline: none;
             transition: all 0.3s var(--easing);
@@ -242,7 +242,7 @@
             border: 1px solid rgba(77, 171, 247, 0.3);
             border-radius: 10px;
             padding: 14px 28px;
-            font-size: 1.1rem;
+            font-size: clamp(0.95rem, 3.5vw, 1.1rem);
             font-family: 'Orbitron', sans-serif;
             cursor: pointer;
             transition: all 0.3s var(--easing);
@@ -253,6 +253,8 @@
             letter-spacing: 0.5px;
             font-weight: 500;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            flex: 1 1 auto;
+            max-width: 100%;
         }
         
         button::before {
@@ -268,7 +270,7 @@
             transition: opacity 0.3s var(--easing);
         }
         
-        button:hover {
+        button:hover, button:active {
             transform: translateY(-3px);
             color: #fff;
             border-color: rgba(77, 171, 247, 0.6);
@@ -283,7 +285,8 @@
             border-color: rgba(156, 54, 181, 0.3);
         }
         
-        #resetBtn:hover, #resetAfterCreateBtn:hover {
+        #resetBtn:hover, #resetAfterCreateBtn:hover,
+        #resetBtn:active, #resetAfterCreateBtn:active {
             border-color: rgba(156, 54, 181, 0.6);
         }
         
@@ -293,7 +296,7 @@
         }
         
         .tracker-box {
-            height: 220px;
+            height: 180px;
             border: 1px solid rgba(77, 171, 247, 0.3);
             border-radius: 10px;
             position: relative;
@@ -317,7 +320,7 @@
         }
         
         .timer {
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 5vw, 2rem);
             font-family: 'Orbitron', sans-serif;
             color: var(--primary);
             margin: 20px 0 10px;
@@ -353,7 +356,7 @@
         
         .result {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
             margin: 30px 0;
             padding: 22px;
             border-radius: 10px;
@@ -392,7 +395,7 @@
             max-height: 150px;
             overflow-y: auto;
             border: 1px solid rgba(77, 171, 247, 0.2);
-            font-size: 0.9rem;
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
             line-height: 1.8;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
         }
@@ -411,17 +414,6 @@
             animation: none;
         }
         
-        .instructions {
-            background: rgba(30, 30, 46, 0.8);
-            border-left: 3px solid var(--primary);
-            padding: 18px;
-            margin: 25px 0;
-            border-radius: 0 10px 10px 0;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
         .logo {
             text-align: center;
             margin-bottom: 20px;
@@ -431,7 +423,7 @@
         .logo span {
             display: inline-block;
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
             color: var(--primary);
             position: relative;
         }
@@ -446,43 +438,6 @@
             background: linear-gradient(90deg, var(--primary), transparent);
         }
         
-        @media (max-width: 650px) {
-            .container {
-                padding: 30px 20px;
-                width: 95%;
-            }
-            
-            h1 {
-                font-size: 2.2rem;
-            }
-            
-            h2 {
-                font-size: 1.6rem;
-            }
-            
-            button {
-                min-width: 160px;
-                padding: 12px 20px;
-                font-size: 1rem;
-            }
-            
-            .button-group {
-                flex-direction: column;
-                align-items: center;
-                gap: 12px;
-            }
-            
-            .fixed-phrase {
-                padding: 15px;
-                font-size: 1.3rem;
-            }
-            
-            input {
-                padding: 14px;
-                font-size: 1.1rem;
-            }
-        }
-        
         /* Animation for signature creation */
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(77, 171, 247, 0.4); }
@@ -492,6 +447,77 @@
         
         .pulse {
             animation: pulse 2s infinite;
+        }
+        
+        /* Mobile-specific optimizations */
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                padding: 25px 20px;
+                border-radius: 14px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            button {
+                width: 100%;
+                max-width: 100%;
+                padding: 16px;
+            }
+            
+            .tracker-box {
+                height: 150px;
+            }
+            
+            .fixed-phrase {
+                padding: 15px;
+                margin: 20px 0;
+            }
+            
+            input {
+                padding: 14px;
+            }
+            
+            .signature-display {
+                padding: 15px;
+                max-height: 120px;
+            }
+        }
+        
+        @media (max-width: 350px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            .timer {
+                font-size: 1.3rem;
+            }
+            
+            .result {
+                padding: 18px;
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* Prevent zoom on input focus for mobile */
+        @media screen and (max-width: 768px) {
+            input, select, textarea {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
@@ -991,6 +1017,13 @@
                 showScreen(verifyScreen);
             } else {
                 showScreen(introScreen);
+            }
+        });
+        
+        // Prevent form submission on Enter key
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
             }
         });
     </script>
