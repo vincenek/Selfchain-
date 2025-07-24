@@ -39,6 +39,43 @@
             position: relative;
         }
         
+        /* Background Animation */
+        .background-dots {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        .dot {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(20vw);
+                opacity: 0;
+            }
+        }
+        
         /* Layout */
         .container {
             max-width: 1200px;
@@ -55,6 +92,8 @@
             padding: 20px;
             background: var(--card-bg);
             border-bottom: 1px solid var(--card-border);
+            position: relative;
+            z-index: 20;
         }
         
         .logo {
@@ -87,6 +126,8 @@
             grid-template-columns: 280px 1fr;
             gap: 25px;
             margin-top: 30px;
+            position: relative;
+            z-index: 10;
         }
         
         .sidebar {
@@ -94,6 +135,8 @@
             border-radius: 16px;
             padding: 25px;
             height: fit-content;
+            position: relative;
+            z-index: 15;
         }
         
         .main-content {
@@ -102,6 +145,8 @@
             padding: 30px;
             border: 1px solid var(--card-border);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 15;
         }
         
         /* Typography */
@@ -180,12 +225,31 @@
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
         
         .btn:hover {
-            background: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn:hover::before {
+            opacity: 1;
         }
         
         .btn i {
@@ -246,6 +310,7 @@
             color: var(--text);
             font-size: 1rem;
             font-family: 'Roboto Mono', monospace;
+            transition: all 0.3s;
         }
         
         input:focus {
@@ -281,7 +346,7 @@
         
         .tracker-box {
             height: 250px;
-            border: 1px dashed var(--card-border);
+            border: 1px solid var(--card-border);
             border-radius: 12px;
             position: relative;
             overflow: hidden;
@@ -315,6 +380,32 @@
             pointer-events: none;
             z-index: 10;
             box-shadow: 0 0 8px rgba(76, 201, 240, 0.7);
+        }
+        
+        /* Timer and Progress Bar */
+        .timer {
+            font-size: 1.5rem;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--secondary);
+            text-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: rgba(76, 201, 240, 0.2);
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: var(--secondary);
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.7);
         }
         
         /* Mobile specific */
@@ -524,9 +615,23 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* Animations */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
     </style>
 </head>
 <body>
+    <!-- Background dots -->
+    <div class="background-dots" id="backgroundDots"></div>
+    
     <header class="app-header">
         <div class="logo">
             <i class="fas fa-fingerprint logo-icon"></i>
@@ -631,6 +736,44 @@
                     </div>
                 </div>
                 
+                <!-- About Screen -->
+                <div id="aboutScreen" class="screen">
+                    <div class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        <h1>About SelfChain</h1>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Advanced Behavioral Biometrics</h2>
+                        </div>
+                        <p>SelfChain uses cutting-edge technology to create a unique identity signature based on your individual behavioral patterns.</p>
+                        
+                        <div class="about-content">
+                            <h3>How It Works</h3>
+                            <p>When you create your identity, SelfChain records:</p>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-keyboard"></i> Your unique typing rhythm and cadence</li>
+                                <li><i class="fas fa-mouse-pointer"></i> Your natural movement patterns (mouse or touch)</li>
+                                <li><i class="fas fa-lock"></i> Combined data points that form your behavioral fingerprint</li>
+                            </ul>
+                            
+                            <h3>Security Features</h3>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-shield-alt"></i> 256-bit encryption of your behavioral signature</li>
+                                <li><i class="fas fa-user-secret"></i> Data never leaves your device</li>
+                                <li><i class="fas fa-bolt"></i> Real-time verification with 98% accuracy</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button id="backToDashboardBtn" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </button>
+                    </div>
+                </div>
+                
                 <!-- Enrollment Screen -->
                 <div id="enrollScreen" class="screen">
                     <div class="section-title">
@@ -638,39 +781,28 @@
                         <h1>Create Your Identity</h1>
                     </div>
                     
-                    <p>Create your unique behavioral signature by completing the following steps:</p>
+                    <p>Type the phrase below and move your mouse naturally in the box for 5 seconds.</p>
                     
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Step 1: Type the Passphrase</h2>
-                        </div>
-                        <div class="fixed-phrase">This is me</div>
-                        <div class="input-group">
-                            <label class="input-label">Type the phrase exactly as shown:</label>
-                            <input type="text" id="phraseInput" placeholder="Type 'This is me' to begin" autocomplete="off">
-                        </div>
+                    <div class="fixed-phrase">This is me</div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Type the phrase:</label>
+                        <input type="text" id="phraseInput" placeholder="Type 'This is me' to begin" autocomplete="off">
                     </div>
                     
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Step 2: Movement Pattern</h2>
-                            <button id="startMovementBtn" class="btn btn-sm">
-                                <i class="fas fa-play"></i> Start Movement
-                            </button>
+                    <div class="tracker-container">
+                        <div class="timer" id="mouseTimer">5.0s</div>
+                        <div class="progress-bar">
+                            <div class="progress" id="mouseProgress"></div>
                         </div>
-                        <div class="tracker-container">
-                            <div class="tracker-box" id="mouseTracker">
-                                <div class="tracker-instructions">Click "Start Movement" and move your cursor/finger in this area</div>
-                            </div>
+                        <div class="tracker-box" id="mouseTracker">
+                            <div class="tracker-instructions">Move your cursor/finger in this area</div>
                         </div>
                     </div>
                     
                     <div class="btn-group">
                         <button id="cancelEnrollBtn" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Back
-                        </button>
-                        <button id="generateSignatureBtn" class="btn">
-                            <i class="fas fa-fingerprint"></i> Generate Identity
+                            <i class="fas fa-arrow-left"></i> Cancel
                         </button>
                     </div>
                 </div>
@@ -682,30 +814,22 @@
                         <h1>Verify Your Identity</h1>
                     </div>
                     
-                    <p>Verify your identity by recreating your behavioral signature.</p>
+                    <p>Type the phrase below and move your mouse naturally in the box to verify your identity.</p>
                     
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Step 1: Type the Passphrase</h2>
-                        </div>
-                        <div class="fixed-phrase">This is me</div>
-                        <div class="input-group">
-                            <label class="input-label">Type the phrase exactly as shown:</label>
-                            <input type="text" id="verifyPhraseInput" placeholder="Type 'This is me' to verify" autocomplete="off">
-                        </div>
+                    <div class="fixed-phrase">This is me</div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Type the phrase:</label>
+                        <input type="text" id="verifyPhraseInput" placeholder="Type 'This is me' to verify" autocomplete="off">
                     </div>
                     
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Step 2: Movement Pattern</h2>
-                            <button id="startVerifyMovementBtn" class="btn btn-sm">
-                                <i class="fas fa-play"></i> Start Movement
-                            </button>
+                    <div class="tracker-container">
+                        <div class="timer" id="verifyMouseTimer">5.0s</div>
+                        <div class="progress-bar">
+                            <div class="progress" id="verifyMouseProgress"></div>
                         </div>
-                        <div class="tracker-container">
-                            <div class="tracker-box" id="verifyMouseTracker">
-                                <div class="tracker-instructions">Click "Start Movement" and move your cursor/finger in this area</div>
-                            </div>
+                        <div class="tracker-box" id="verifyMouseTracker">
+                            <div class="tracker-instructions">Move your cursor/finger in this area</div>
                         </div>
                     </div>
                     
@@ -776,13 +900,14 @@
     <script>
         // DOM Elements
         const introScreen = document.getElementById('introScreen');
+        const aboutScreen = document.getElementById('aboutScreen');
         const enrollScreen = document.getElementById('enrollScreen');
         const verifyScreen = document.getElementById('verifyScreen');
         const identityCreatedScreen = document.getElementById('identityCreatedScreen');
         const createIdentityBtn = document.getElementById('createIdentityBtn');
         const learnMoreBtn = document.getElementById('learnMoreBtn');
+        const backToDashboardBtn = document.getElementById('backToDashboardBtn');
         const cancelEnrollBtn = document.getElementById('cancelEnrollBtn');
-        const generateSignatureBtn = document.getElementById('generateSignatureBtn');
         const verifyBtn = document.getElementById('verifyBtn');
         const resetBtn = document.getElementById('resetBtn');
         const exportBtn = document.getElementById('exportBtn');
@@ -798,17 +923,43 @@
         const verificationResult = document.getElementById('verificationResult');
         const helpBtn = document.getElementById('helpBtn');
         const navLinks = document.querySelectorAll('.nav-link');
-        const startMovementBtn = document.getElementById('startMovementBtn');
-        const startVerifyMovementBtn = document.getElementById('startVerifyMovementBtn');
+        const mouseTimer = document.getElementById('mouseTimer');
+        const verifyMouseTimer = document.getElementById('verifyMouseTimer');
+        const mouseProgress = document.getElementById('mouseProgress');
+        const verifyMouseProgress = document.getElementById('verifyMouseProgress');
+        const backgroundDots = document.getElementById('backgroundDots');
         
         // State variables
+        let storedSignature = null;
         let mouseData = [];
         let typingData = [];
         let verifyMouseData = [];
         let verifyTypingData = [];
+        let mouseInterval = null;
+        let verifyMouseInterval = null;
         let mouseRecording = false;
         let verifyMouseRecording = false;
+        let mouseStartTime = 0;
+        let verifyMouseStartTime = 0;
+        let typingStartTime = 0;
+        let verifyTypingStartTime = 0;
         const targetPhrase = "This is me";
+        const recordingDuration = 5000; // 5 seconds
+        
+        // Initialize background dots
+        function initBackgroundDots() {
+            const dotsCount = 50;
+            for (let i = 0; i < dotsCount; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                dot.style.left = `${Math.random() * 100}%`;
+                dot.style.top = `${Math.random() * 100}%`;
+                dot.style.animationDelay = `${Math.random() * 15}s`;
+                dot.style.width = `${2 + Math.random() * 3}px`;
+                dot.style.height = dot.style.width;
+                backgroundDots.appendChild(dot);
+            }
+        }
         
         // Navigation
         navLinks.forEach(link => {
@@ -830,7 +981,7 @@
         // Show specific screen
         function showScreen(screen) {
             // Hide all screens
-            [introScreen, enrollScreen, verifyScreen, identityCreatedScreen].forEach(s => {
+            [introScreen, aboutScreen, enrollScreen, verifyScreen, identityCreatedScreen].forEach(s => {
                 s.classList.remove('active');
             });
             
@@ -844,15 +995,18 @@
             typingData = [];
             if (phraseInput) phraseInput.value = '';
             mouseRecording = false;
+            mouseTimer.textContent = '5.0s';
+            mouseProgress.style.width = '0%';
             
-            // Clear any existing paths
+            // Clear any existing paths and interval
+            clearInterval(mouseInterval);
             if (mouseTracker) {
                 while (mouseTracker.firstChild) {
                     if (!mouseTracker.firstChild.classList.contains('tracker-instructions')) {
                         mouseTracker.removeChild(mouseTracker.firstChild);
                     }
                 }
-                mouseTracker.innerHTML = '<div class="tracker-instructions">Click "Start Movement" and move your cursor/finger in this area</div>';
+                mouseTracker.innerHTML = '<div class="tracker-instructions">Move your cursor/finger in this area</div>';
             }
         }
         
@@ -862,15 +1016,18 @@
             verifyTypingData = [];
             if (verifyPhraseInput) verifyPhraseInput.value = '';
             verifyMouseRecording = false;
+            verifyMouseTimer.textContent = '5.0s';
+            verifyMouseProgress.style.width = '0%';
             
-            // Clear any existing paths
+            // Clear any existing paths and interval
+            clearInterval(verifyMouseInterval);
             if (verifyMouseTracker) {
                 while (verifyMouseTracker.firstChild) {
                     if (!verifyMouseTracker.firstChild.classList.contains('tracker-instructions')) {
                         verifyMouseTracker.removeChild(verifyMouseTracker.firstChild);
                     }
                 }
-                verifyMouseTracker.innerHTML = '<div class="tracker-instructions">Click "Start Movement" and move your cursor/finger in this area</div>';
+                verifyMouseTracker.innerHTML = '<div class="tracker-instructions">Move your cursor/finger in this area</div>';
             }
             
             if (verificationResult) {
@@ -879,58 +1036,36 @@
             }
         }
         
-        // Generate a unique signature from behavior data
-        function generateSignature(typingPattern, mousePattern) {
-            // Create a unique identifier from the data
-            let signature = '';
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            const charactersLength = characters.length;
-            
-            // Create a 32-character signature
-            for (let i = 0; i < 32; i++) {
-                signature += characters.charAt(Math.floor(Math.random() * charactersLength));
-            }
-            
-            return signature;
-        }
-        
-        // Calculate similarity between two signatures
-        function calculateSimilarity(sig1, sig2) {
-            if (!sig1 || !sig2 || sig1.length !== sig2.length) return 0;
-            
-            let matchCount = 0;
-            
-            for (let i = 0; i < sig1.length; i++) {
-                if (sig1[i] === sig2[i]) {
-                    matchCount++;
-                }
-            }
-            
-            return (matchCount / sig1.length) * 100;
-        }
-        
-        // Start movement recording
-        function startMovementRecording(verify = false) {
+        // Start mouse movement recording
+        function startMouseRecording(verify = false) {
             const tracker = verify ? verifyMouseTracker : mouseTracker;
-            const isVerification = verify;
-            
-            if ((verify && verifyMouseRecording) || (!verify && mouseRecording)) {
-                return;
-            }
+            const timer = verify ? verifyMouseTimer : mouseTimer;
+            const progress = verify ? verifyMouseProgress : mouseProgress;
             
             if (verify) {
+                if (verifyMouseRecording) return;
                 verifyMouseRecording = true;
                 verifyMouseData = [];
+                verifyMouseStartTime = Date.now();
             } else {
+                if (mouseRecording) return;
                 mouseRecording = true;
                 mouseData = [];
+                mouseStartTime = Date.now();
             }
             
             // Clear previous paths
-            tracker.innerHTML = '';
+            while (tracker.firstChild) {
+                tracker.removeChild(tracker.firstChild);
+            }
             
-            // Handle movement for both mouse and touch
-            const handleMovement = (x, y, timestamp) => {
+            // Add event listener for mouse movement
+            const handleMouseMove = (e) => {
+                const rect = tracker.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const timestamp = Date.now();
+                
                 const dataPoint = { x, y, timestamp };
                 
                 if (verify) {
@@ -947,61 +1082,69 @@
                 tracker.appendChild(pathPoint);
             };
             
-            // Mouse movement handler
-            const handleMouseMove = (e) => {
-                const rect = tracker.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                handleMovement(x, y, Date.now());
-            };
-            
-            // Touch movement handler
-            const handleTouchMove = (e) => {
-                e.preventDefault();
-                if (e.touches.length === 0) return;
-                
-                const touch = e.touches[0];
-                const rect = tracker.getBoundingClientRect();
-                const x = touch.clientX - rect.left;
-                const y = touch.clientY - rect.top;
-                handleMovement(x, y, Date.now());
-            };
-            
-            // Add event listeners
             tracker.addEventListener('mousemove', handleMouseMove);
-            tracker.addEventListener('touchmove', handleTouchMove, { passive: false });
             
-            // Store references for removal
-            tracker._mouseHandler = handleMouseMove;
-            tracker._touchHandler = handleTouchMove;
-        }
-        
-        // Stop movement recording
-        function stopMovementRecording(verify = false) {
-            const tracker = verify ? verifyMouseTracker : mouseTracker;
-            
-            if (tracker._mouseHandler) {
-                tracker.removeEventListener('mousemove', tracker._mouseHandler);
-            }
-            if (tracker._touchHandler) {
-                tracker.removeEventListener('touchmove', tracker._touchHandler);
-            }
+            // Start timer
+            let elapsed = 0;
             
             if (verify) {
-                verifyMouseRecording = false;
+                clearInterval(verifyMouseInterval);
+                verifyMouseInterval = setInterval(() => {
+                    elapsed = Date.now() - verifyMouseStartTime;
+                    const remaining = Math.max(0, recordingDuration - elapsed);
+                    timer.textContent = (remaining / 1000).toFixed(1) + 's';
+                    progress.style.width = `${(elapsed / recordingDuration) * 100}%`;
+                    
+                    if (elapsed >= recordingDuration) {
+                        clearInterval(verifyMouseInterval);
+                        verifyMouseRecording = false;
+                        tracker.removeEventListener('mousemove', handleMouseMove);
+                        if (verify) {
+                            completeVerification();
+                        }
+                    }
+                }, 50);
             } else {
-                mouseRecording = false;
+                clearInterval(mouseInterval);
+                mouseInterval = setInterval(() => {
+                    elapsed = Date.now() - mouseStartTime;
+                    const remaining = Math.max(0, recordingDuration - elapsed);
+                    timer.textContent = (remaining / 1000).toFixed(1) + 's';
+                    progress.style.width = `${(elapsed / recordingDuration) * 100}%`;
+                    
+                    if (elapsed >= recordingDuration) {
+                        clearInterval(mouseInterval);
+                        mouseRecording = false;
+                        tracker.removeEventListener('mousemove', handleMouseMove);
+                        completeEnrollment();
+                    }
+                }, 50);
             }
         }
         
         // Analyze typing pattern
-        function analyzeTyping(input, target, isVerification = false) {
-            const pattern = {
-                text: input,
-                length: input.length,
-                target: target,
-                match: input === target
-            };
+        function analyzeTyping(input, target, startTime, isVerification = false) {
+            const pattern = [];
+            let lastKeyTime = startTime;
+            
+            for (let i = 0; i < input.length; i++) {
+                if (i < target.length) {
+                    const char = input[i];
+                    const targetChar = target[i];
+                    const isCorrect = char === targetChar;
+                    const timeDiff = i === 0 ? 0 : Date.now() - lastKeyTime;
+                    
+                    pattern.push({
+                        char,
+                        targetChar,
+                        isCorrect,
+                        timeDiff,
+                        position: i
+                    });
+                    
+                    lastKeyTime = Date.now();
+                }
+            }
             
             if (isVerification) {
                 verifyTypingData = pattern;
@@ -1010,6 +1153,48 @@
             }
             
             return pattern;
+        }
+        
+        // Generate a unique signature from behavior data
+        function generateSignature(typingPattern, mousePattern) {
+            // Combine data
+            const combinedData = {
+                typing: typingPattern,
+                mouse: mousePattern
+            };
+            
+            // Create a simple hash from the data
+            const dataString = JSON.stringify(combinedData);
+            let hash = 0;
+            
+            if (dataString.length === 0) return '';
+            
+            for (let i = 0; i < dataString.length; i++) {
+                const char = dataString.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            
+            // Convert to hex and base64 for a more compact representation
+            const hexString = (hash >>> 0).toString(16);
+            const base64String = btoa(hexString);
+            
+            return base64String.substring(0, 32); // Return first 32 characters
+        }
+        
+        // Calculate similarity between two signatures
+        function calculateSimilarity(sig1, sig2) {
+            if (sig1.length !== sig2.length) return 0;
+            
+            let matchCount = 0;
+            
+            for (let i = 0; i < sig1.length; i++) {
+                if (sig1[i] === sig2[i]) {
+                    matchCount++;
+                }
+            }
+            
+            return (matchCount / sig1.length) * 100;
         }
         
         // Complete enrollment process
@@ -1179,8 +1364,10 @@
         });
         
         learnMoreBtn.addEventListener('click', () => {
-            // Update navigation
-            navLinks.forEach(link => link.classList.remove('active'));
+            showScreen(aboutScreen);
+        });
+        
+        backToDashboardBtn.addEventListener('click', () => {
             showScreen(introScreen);
         });
         
@@ -1196,37 +1383,41 @@
             showScreen(introScreen);
         });
         
-        generateSignatureBtn.addEventListener('click', () => {
-            stopMovementRecording();
-            completeEnrollment();
+        phraseInput.addEventListener('focus', () => {
+            typingStartTime = Date.now();
         });
         
-        startMovementBtn.addEventListener('click', () => {
-            startMovementRecording();
+        phraseInput.addEventListener('input', () => {
+            if (phraseInput.value.length === 1) {
+                typingStartTime = Date.now();
+            }
+            
+            analyzeTyping(phraseInput.value, targetPhrase, typingStartTime);
+            
+            // Start mouse recording when user starts typing
+            if (phraseInput.value.length === 1 && !mouseRecording) {
+                startMouseRecording();
+            }
         });
         
-        startVerifyMovementBtn.addEventListener('click', () => {
-            startMovementRecording(true);
+        verifyPhraseInput.addEventListener('focus', () => {
+            verifyTypingStartTime = Date.now();
         });
         
-        if (phraseInput) {
-            phraseInput.addEventListener('input', () => {
-                analyzeTyping(phraseInput.value, targetPhrase);
-            });
-        }
+        verifyPhraseInput.addEventListener('input', () => {
+            if (verifyPhraseInput.value.length === 1) {
+                verifyTypingStartTime = Date.now();
+            }
+            
+            analyzeTyping(verifyPhraseInput.value, targetPhrase, verifyTypingStartTime, true);
+        });
         
-        if (verifyPhraseInput) {
-            verifyPhraseInput.addEventListener('input', () => {
-                analyzeTyping(verifyPhraseInput.value, targetPhrase, true);
-            });
-        }
-        
-        if (verifyBtn) {
-            verifyBtn.addEventListener('click', () => {
-                stopMovementRecording(true);
-                completeVerification();
-            });
-        }
+        verifyBtn.addEventListener('click', () => {
+            if (!verifyMouseRecording) {
+                resetVerification();
+                startMouseRecording(true);
+            }
+        });
         
         if (resetBtn) resetBtn.addEventListener('click', resetIdentity);
         if (resetAfterCreateBtn) resetAfterCreateBtn.addEventListener('click', resetIdentity);
@@ -1251,6 +1442,8 @@
         
         // Check for existing identity on load
         window.addEventListener('DOMContentLoaded', () => {
+            initBackgroundDots();
+            
             if (localStorage.getItem('selfchain_signature')) {
                 // Update navigation
                 navLinks.forEach(link => link.classList.remove('active'));
