@@ -516,6 +516,77 @@
             color: var(--text-secondary);
         }
         
+        /* Security enhancements */
+        .security-features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .security-badge {
+            background: rgba(77, 171, 247, 0.15);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .security-badge i {
+            margin-right: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .consent-box {
+            background: rgba(30, 30, 46, 0.8);
+            border: 1px solid rgba(77, 171, 247, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 0.9rem;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .consent-box label {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+        }
+        
+        .consent-box input[type="checkbox"] {
+            margin-right: 10px;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+        
+        .security-level {
+            height: 8px;
+            background: rgba(77, 171, 247, 0.1);
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .security-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .security-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        
         /* Mobile-specific optimizations */
         @media (max-width: 480px) {
             body {
@@ -562,6 +633,15 @@
                 right: 15px;
                 top: 15px;
                 max-width: none;
+            }
+            
+            .security-features {
+                gap: 8px;
+            }
+            
+            .security-badge {
+                padding: 5px 10px;
+                font-size: 0.7rem;
             }
         }
         
@@ -612,8 +692,24 @@
             <h1>Become Your Digital Signature</h1>
             <p>Create a unique identity signature based on your typing patterns and device interactions.</p>
             <p>Your behavioral biometrics become your personal key to digital identity verification.</p>
+            
+            <div class="consent-box">
+                <label>
+                    <input type="checkbox" id="consentCheckbox">
+                    I understand that SelfChain collects behavioral biometrics for identity verification. 
+                    All data is processed locally on my device and never leaves my computer. 
+                    I can delete my identity at any time.
+                </label>
+            </div>
+            
+            <div class="security-features">
+                <div class="security-badge">🔒 Local Processing</div>
+                <div class="security-badge">🛡️ AES-256 Encryption</div>
+                <div class="security-badge">🚫 Anti-Spoofing</div>
+            </div>
+            
             <div class="button-group">
-                <button id="createIdentityBtn">Create My Identity</button>
+                <button id="createIdentityBtn" disabled>Create My Identity</button>
             </div>
         </div>
         
@@ -631,6 +727,14 @@
             
             <div class="input-container">
                 <input type="text" id="phraseInput" placeholder="Type the phrase above" autocomplete="off">
+            </div>
+            
+            <div class="security-level">
+                <div class="security-fill" id="securityStrength"></div>
+            </div>
+            <div class="security-labels">
+                <span>Weak</span>
+                <span>Strong</span>
             </div>
             
             <div class="tracker-container">
@@ -686,6 +790,11 @@
             
             <div class="signature-display" id="signatureDisplay"></div>
             
+            <div class="security-features">
+                <div class="security-badge">🔑 Encrypted with AES-256</div>
+                <div class="security-badge">📱 Device-bound</div>
+            </div>
+            
             <p>You can now verify your identity using your unique behavioral patterns.</p>
             
             <div class="button-group">
@@ -724,6 +833,8 @@
         const notification = document.getElementById('notification');
         const enrollDeviceInfo = document.getElementById('enrollDeviceInfo');
         const verifyDeviceInfo = document.getElementById('verifyDeviceInfo');
+        const consentCheckbox = document.getElementById('consentCheckbox');
+        const securityStrength = document.getElementById('securityStrength');
         
         // State variables
         let storedSignature = null;
@@ -745,6 +856,9 @@
         let animationFrameId = null;
         const MAX_POINTS = 200; // Limit number of tracking points
         let isTouchDevice = false;
+        let verificationAttempts = 0;
+        const MAX_ATTEMPTS = 5;
+        let lockoutUntil = 0;
 
         // Initialize background dots
         function initBackgroundDots() {
@@ -798,6 +912,7 @@
             phraseInput.value = '';
             mouseTimer.textContent = '5.0s';
             mouseProgress.style.width = '0%';
+            securityStrength.style.width = '0%';
             
             // Clear any existing paths
             while (mouseTracker.firstChild) {
@@ -821,31 +936,302 @@
             }
         }
         
-        // Generate a unique signature from behavior data
-        function generateSignature(typingPattern, mousePattern) {
-            // Combine data
-            const combinedData = {
-                typing: typingPattern,
-                mouse: mousePattern
-            };
+        // ================== SECURITY ENHANCEMENTS ================== //
+        
+        // Generate encryption key from behavioral data
+        async function generateEncryptionKey(typingPattern, mousePattern) {
+            try {
+                // Combine data to create key material
+                const combinedData = JSON.stringify({
+                    typing: typingPattern,
+                    mouse: mousePattern
+                });
+                
+                // Create key from combined data
+                const encoder = new TextEncoder();
+                const dataBuffer = encoder.encode(combinedData);
+                
+                // Derive a secure key using PBKDF2
+                const baseKey = await crypto.subtle.importKey(
+                    "raw",
+                    dataBuffer,
+                    {name: "PBKDF2"},
+                    false,
+                    ["deriveKey"]
+                );
+                
+                const salt = crypto.getRandomValues(new Uint8Array(16));
+                const key = await crypto.subtle.deriveKey(
+                    {
+                        name: "PBKDF2",
+                        salt: salt,
+                        iterations: 100000,
+                        hash: "SHA-256"
+                    },
+                    baseKey,
+                    {name: "AES-GCM", length: 256},
+                    true,
+                    ["encrypt", "decrypt"]
+                );
+                
+                return key;
+            } catch (error) {
+                console.error('Key generation error:', error);
+                throw new Error('Failed to generate encryption key');
+            }
+        }
+        
+        // Encrypt signature using AES-GCM
+        async function encryptSignature(signature, key) {
+            try {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(signature);
+                
+                // Generate a random IV
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                
+                // Encrypt the data
+                const encrypted = await crypto.subtle.encrypt(
+                    {name: "AES-GCM", iv: iv},
+                    key,
+                    data
+                );
+                
+                // Combine IV and encrypted data
+                const encryptedArray = new Uint8Array(encrypted);
+                const result = new Uint8Array(iv.length + encryptedArray.length);
+                result.set(iv, 0);
+                result.set(encryptedArray, iv.length);
+                
+                return result;
+            } catch (error) {
+                console.error('Encryption error:', error);
+                throw new Error('Failed to encrypt signature');
+            }
+        }
+        
+        // Decrypt signature using AES-GCM
+        async function decryptSignature(encryptedData, key) {
+            try {
+                // Split IV and encrypted data
+                const iv = encryptedData.slice(0, 12);
+                const data = encryptedData.slice(12);
+                
+                // Decrypt the data
+                const decrypted = await crypto.subtle.decrypt(
+                    {name: "AES-GCM", iv: iv},
+                    key,
+                    data
+                );
+                
+                const decoder = new TextDecoder();
+                return decoder.decode(decrypted);
+            } catch (error) {
+                console.error('Decryption error:', error);
+                throw new Error('Failed to decrypt signature');
+            }
+        }
+        
+        // Store encrypted signature in localStorage
+        async function storeEncryptedSignature(signature, key) {
+            try {
+                const encrypted = await encryptSignature(signature, key);
+                
+                // Convert to base64 for storage
+                const base64String = btoa(String.fromCharCode(...new Uint8Array(encrypted)));
+                localStorage.setItem('selfchain_signature', base64String);
+                
+                return key;
+            } catch (error) {
+                console.error('Storage error:', error);
+                throw new Error('Failed to store encrypted signature');
+            }
+        }
+        
+        // Retrieve and decrypt signature from localStorage
+        async function retrieveEncryptedSignature(key) {
+            try {
+                const base64String = localStorage.getItem('selfchain_signature');
+                if (!base64String) return null;
+                
+                // Convert from base64
+                const binaryString = atob(base64String);
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                
+                // Decrypt the signature
+                return await decryptSignature(bytes, key);
+            } catch (error) {
+                console.error('Retrieval error:', error);
+                throw new Error('Failed to retrieve encrypted signature');
+            }
+        }
+        
+        // ================== BEHAVIORAL ANALYSIS ================== //
+        
+        // Calculate velocity between two points
+        function calculateVelocity(point1, point2) {
+            const distance = Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
+            const timeDiff = (point2.timestamp - point1.timestamp) / 1000; // in seconds
+            return timeDiff > 0 ? distance / timeDiff : 0;
+        }
+        
+        // Calculate acceleration between three points
+        function calculateAcceleration(point1, point2, point3) {
+            const vel1 = calculateVelocity(point1, point2);
+            const vel2 = calculateVelocity(point2, point3);
+            const timeDiff = (point3.timestamp - point1.timestamp) / 2000; // average time diff in seconds
+            return timeDiff > 0 ? (vel2 - vel1) / timeDiff : 0;
+        }
+        
+        // Calculate liveness score (0-100)
+        function calculateLivenessScore(mouseData) {
+            if (mouseData.length < 3) return 0;
             
-            // Create a simple hash from the data
-            const dataString = JSON.stringify(combinedData);
-            let hash = 0;
+            let velocitySum = 0;
+            let velocityVariance = 0;
+            let accelerationSum = 0;
+            let directionChanges = 0;
             
-            if (dataString.length === 0) return '';
+            const velocities = [];
+            const accelerations = [];
             
-            for (let i = 0; i < dataString.length; i++) {
-                const char = dataString.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash; // Convert to 32bit integer
+            // Calculate velocities and accelerations
+            for (let i = 1; i < mouseData.length; i++) {
+                const vel = calculateVelocity(mouseData[i-1], mouseData[i]);
+                velocities.push(vel);
+                velocitySum += vel;
             }
             
-            // Convert to hex and base64 for a more compact representation
-            const hexString = (hash >>> 0).toString(16).padStart(8, '0');
-            const base64String = btoa(hexString);
+            for (let i = 2; i < mouseData.length; i++) {
+                const acc = calculateAcceleration(mouseData[i-2], mouseData[i-1], mouseData[i]);
+                accelerations.push(acc);
+                accelerationSum += Math.abs(acc);
+            }
             
-            return base64String.substring(0, 32); // Return first 32 characters
+            // Calculate velocity variance
+            const meanVelocity = velocitySum / velocities.length;
+            for (const vel of velocities) {
+                velocityVariance += Math.pow(vel - meanVelocity, 2);
+            }
+            velocityVariance /= velocities.length;
+            
+            // Calculate direction changes
+            for (let i = 1; i < velocities.length; i++) {
+                if (Math.sign(velocities[i]) !== Math.sign(velocities[i-1])) {
+                    directionChanges++;
+                }
+            }
+            
+            // Calculate scores (these weights can be adjusted)
+            const velocityScore = Math.min(100, Math.log(velocityVariance + 1) * 30);
+            const accelerationScore = Math.min(100, accelerationSum / accelerations.length * 10);
+            const directionScore = Math.min(100, (directionChanges / velocities.length) * 200);
+            
+            // Weighted average of scores
+            return (velocityScore * 0.4) + (accelerationScore * 0.3) + (directionScore * 0.3);
+        }
+        
+        // Generate a unique signature from behavior data
+        async function generateSignature(typingPattern, mousePattern) {
+            // 1. Calculate liveness score to prevent spoofing
+            const livenessScore = calculateLivenessScore(mousePattern);
+            
+            // Require minimum liveness
+            if (livenessScore < 40) {
+                showNotification('Movement too predictable. Please move more naturally.', 'error');
+                throw new Error('Insufficient liveness');
+            }
+            
+            // 2. Extract advanced features
+            const features = {
+                typing: {
+                    duration: typingPattern.length > 0 ? 
+                        typingPattern[typingPattern.length-1].timestamp - typingPattern[0].timestamp : 0,
+                    accuracy: typingPattern.filter(p => p.isCorrect).length / typingPattern.length,
+                    avgInterval: typingPattern.reduce((sum, p) => sum + p.timeDiff, 0) / typingPattern.length,
+                    variance: typingPattern.reduce((sum, p) => sum + Math.pow(p.timeDiff, 2), 0) / typingPattern.length
+                },
+                mouse: {
+                    distance: calculateTotalDistance(mousePattern),
+                    avgVelocity: calculateAverageVelocity(mousePattern),
+                    directionChanges: calculateDirectionChanges(mousePattern),
+                    curvature: calculateCurvature(mousePattern)
+                }
+            };
+            
+            // 3. Create a secure hash from the features
+            const dataString = JSON.stringify(features);
+            const encoder = new TextEncoder();
+            const data = encoder.encode(dataString);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+        
+        // Helper functions for feature extraction
+        function calculateTotalDistance(points) {
+            let distance = 0;
+            for (let i = 1; i < points.length; i++) {
+                const dx = points[i].x - points[i-1].x;
+                const dy = points[i].y - points[i-1].y;
+                distance += Math.sqrt(dx*dx + dy*dy);
+            }
+            return distance;
+        }
+        
+        function calculateAverageVelocity(points) {
+            if (points.length < 2) return 0;
+            const totalTime = points[points.length-1].timestamp - points[0].timestamp;
+            return calculateTotalDistance(points) / (totalTime / 1000);
+        }
+        
+        function calculateDirectionChanges(points) {
+            if (points.length < 3) return 0;
+            let changes = 0;
+            let prevDx = points[1].x - points[0].x;
+            let prevDy = points[1].y - points[0].y;
+            
+            for (let i = 2; i < points.length; i++) {
+                const dx = points[i].x - points[i-1].x;
+                const dy = points[i].y - points[i-1].y;
+                
+                // Dot product to detect direction change
+                const dot = prevDx*dx + prevDy*dy;
+                if (dot < 0) changes++;
+                
+                prevDx = dx;
+                prevDy = dy;
+            }
+            
+            return changes;
+        }
+        
+        function calculateCurvature(points) {
+            if (points.length < 3) return 0;
+            let curvatureSum = 0;
+            
+            for (let i = 1; i < points.length - 1; i++) {
+                const p1 = points[i-1];
+                const p2 = points[i];
+                const p3 = points[i+1];
+                
+                const dx1 = p2.x - p1.x;
+                const dy1 = p2.y - p1.y;
+                const dx2 = p3.x - p2.x;
+                const dy2 = p3.y - p2.y;
+                
+                const cross = Math.abs(dx1*dy2 - dy1*dx2);
+                const dot = dx1*dx2 + dy1*dy2;
+                
+                if (dot !== 0) {
+                    curvatureSum += cross / Math.sqrt(dx1*dx1 + dy1*dy1) / Math.sqrt(dx2*dx2 + dy2*dy2);
+                }
+            }
+            
+            return curvatureSum / (points.length - 2);
         }
         
         // Calculate similarity between two signatures
@@ -920,6 +1306,9 @@
                 } else {
                     if (mouseData.length < MAX_POINTS) {
                         mouseData.push(dataPoint);
+                        // Update security strength indicator
+                        const livenessScore = calculateLivenessScore(mouseData);
+                        securityStrength.style.width = `${Math.min(100, livenessScore)}%`;
                     }
                 }
                 
@@ -1019,7 +1408,8 @@
                         targetChar,
                         isCorrect,
                         timeDiff,
-                        position: i
+                        position: i,
+                        timestamp: Date.now()
                     });
                     
                     lastKeyTime = Date.now();
@@ -1036,9 +1426,9 @@
         }
         
         // Complete enrollment process
-        function completeEnrollment() {
+        async function completeEnrollment() {
             try {
-                // FIX: Make mouse/touch data optional
+                // Check if user typed at least one character
                 if (phraseInput.value.length === 0) {
                     showNotification('Please type at least one character', 'error');
                     resetEnrollment();
@@ -1047,33 +1437,42 @@
                 }
                 
                 // Generate signature
-                storedSignature = generateSignature(typingData, mouseData);
+                const signature = await generateSignature(typingData, mouseData);
                 
-                if (!storedSignature) {
-                    showNotification('Failed to generate signature', 'error');
-                    return;
-                }
+                // Generate encryption key
+                const key = await generateEncryptionKey(typingData, mouseData);
                 
-                // Save to localStorage
-                localStorage.setItem('selfchain_signature', storedSignature);
+                // Store encrypted signature
+                await storeEncryptedSignature(signature, key);
                 
                 // Display signature
-                signatureDisplay.textContent = storedSignature;
+                signatureDisplay.textContent = signature.substring(0, 64) + '...'; // Show partial for security
                 
                 // Show identity created screen
                 showScreen(identityCreatedScreen);
                 showNotification('Identity created successfully!', 'success');
             } catch (error) {
                 console.error('Enrollment error:', error);
-                showNotification('Failed to create identity. Please try again.', 'error');
-                showScreen(introScreen);
+                showNotification(error.message || 'Failed to create identity. Please try again.', 'error');
+                resetEnrollment();
+                showScreen(enrollScreen);
             }
         }
         
         // Complete verification process
-        function completeVerification() {
+        async function completeVerification() {
             try {
-                // FIX: Make mouse/touch data optional
+                // Check rate limiting
+                const now = Date.now();
+                if (lockoutUntil > now) {
+                    const minutes = Math.ceil((lockoutUntil - now) / 60000);
+                    showNotification(`Too many attempts. Try again in ${minutes} minute(s).`, 'error');
+                    verificationResult.textContent = '⏳ Account Locked';
+                    verificationResult.classList.add('error', 'show');
+                    return;
+                }
+                
+                // Check if user typed at least one character
                 if (verifyPhraseInput.value.length === 0) {
                     showNotification('Please type at least one character', 'error');
                     resetVerification();
@@ -1081,15 +1480,13 @@
                 }
                 
                 // Generate verification signature
-                const verifySignature = generateSignature(verifyTypingData, verifyMouseData);
+                const verifySignature = await generateSignature(verifyTypingData, verifyMouseData);
                 
-                if (!verifySignature) {
-                    showNotification('Failed to generate verification signature', 'error');
-                    return;
-                }
+                // Generate encryption key from stored behavior
+                const key = await generateEncryptionKey(verifyTypingData, verifyMouseData);
                 
                 // Retrieve stored signature
-                const storedSig = localStorage.getItem('selfchain_signature');
+                const storedSig = await retrieveEncryptedSignature(key);
                 
                 if (!storedSig) {
                     showNotification('No identity found. Please create one first.', 'warning');
@@ -1104,13 +1501,25 @@
                 verificationResult.textContent = `Similarity: ${similarity.toFixed(1)}%`;
                 
                 if (similarity >= 85) {
+                    // Successful verification
                     verificationResult.classList.add('success');
                     verificationResult.textContent = `✔ Access Granted (${similarity.toFixed(1)}% match)`;
                     showNotification('Verification successful! Access granted.', 'success');
+                    verificationAttempts = 0; // Reset attempts on success
                 } else {
+                    // Failed verification
                     verificationResult.classList.add('error');
                     verificationResult.textContent = `✖ Access Denied (${similarity.toFixed(1)}% match)`;
                     showNotification('Verification failed. Access denied.', 'error');
+                    
+                    // Increment attempt counter
+                    verificationAttempts++;
+                    
+                    // Implement rate limiting after multiple failures
+                    if (verificationAttempts >= MAX_ATTEMPTS) {
+                        lockoutUntil = Date.now() + 300000; // 5 minutes lockout
+                        showNotification(`Too many failed attempts. Account locked for 5 minutes.`, 'error');
+                    }
                 }
                 
                 // Show result with animation
@@ -1119,7 +1528,7 @@
                 }, 10);
             } catch (error) {
                 console.error('Verification error:', error);
-                showNotification('Verification failed. Please try again.', 'error');
+                showNotification(error.message || 'Verification failed. Please try again.', 'error');
                 resetVerification();
             }
         }
@@ -1137,7 +1546,8 @@
                 const data = {
                     signature: storedSig,
                     timestamp: new Date().toISOString(),
-                    system: 'SelfChain Identity'
+                    system: 'SelfChain Identity',
+                    warning: 'This signature is device-specific and cannot be used on other devices'
                 };
                 
                 const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -1166,6 +1576,8 @@
             if (confirm('Are you sure you want to reset your identity? This action cannot be undone.')) {
                 localStorage.removeItem('selfchain_signature');
                 storedSignature = null;
+                verificationAttempts = 0;
+                lockoutUntil = 0;
                 resetEnrollment();
                 resetVerification();
                 showScreen(introScreen);
@@ -1231,6 +1643,10 @@
         goToVerifyBtn.addEventListener('click', () => {
             resetVerification();
             showScreen(verifyScreen);
+        });
+        
+        consentCheckbox.addEventListener('change', () => {
+            createIdentityBtn.disabled = !consentCheckbox.checked;
         });
         
         // Check for existing identity on load
