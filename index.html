@@ -37,7 +37,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
             position: relative;
             line-height: 1.6;
             padding: 20px;
@@ -87,9 +86,10 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             width: 100%;
             max-width: 700px;
+            max-height: 90vh;
             padding: 35px;
             position: relative;
-            overflow: hidden;
+            overflow-y: auto;
             z-index: 10;
             border: 1px solid var(--card-border);
             transition: all 0.4s var(--easing);
@@ -514,6 +514,7 @@
             .container {
                 padding: 25px 20px;
                 border-radius: 14px;
+                max-height: 85vh;
             }
             
             .button-group {
@@ -718,10 +719,12 @@
         const targetPhrase = "This is me";
         let lastMouseMoveTime = 0;
         const mouseThrottleTime = 16; // ms (60fps)
+        let animationFrameId = null;
+        const MAX_POINTS = 200; // Limit number of tracking points
 
         // Initialize background dots
         function initBackgroundDots() {
-            const dotsCount = 80;
+            const dotsCount = 50; // Reduced for performance
             backgroundDots.innerHTML = '';
             for (let i = 0; i < dotsCount; i++) {
                 const dot = document.createElement('div');
@@ -857,31 +860,55 @@
                 tracker.removeChild(tracker.firstChild);
             }
             
-            // Throttled mouse move handler
+            // Animation frame-based mouse move handler
+            let lastX = 0, lastY = 0;
+            
             const handleMouseMove = (e) => {
                 const now = Date.now();
                 if (now - lastMouseMoveTime < mouseThrottleTime) return;
-                lastMouseMoveTime = now;
                 
                 const rect = tracker.getBoundingClientRect();
                 const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
                 const y = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
-                const timestamp = Date.now();
                 
+                // Skip if position hasn't changed significantly
+                if (Math.abs(x - lastX) < 2 && Math.abs(y - lastY) < 2) return;
+                
+                lastX = x;
+                lastY = y;
+                
+                const timestamp = Date.now();
                 const dataPoint = { x, y, timestamp };
                 
                 if (verify) {
-                    verifyMouseData.push(dataPoint);
+                    if (verifyMouseData.length < MAX_POINTS) {
+                        verifyMouseData.push(dataPoint);
+                    }
                 } else {
-                    mouseData.push(dataPoint);
+                    if (mouseData.length < MAX_POINTS) {
+                        mouseData.push(dataPoint);
+                    }
                 }
                 
                 // Create a visual indicator of the path
-                const pathPoint = document.createElement('div');
-                pathPoint.classList.add('tracker-path');
-                pathPoint.style.left = `${x}px`;
-                pathPoint.style.top = `${y}px`;
-                tracker.appendChild(pathPoint);
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                }
+                
+                animationFrameId = requestAnimationFrame(() => {
+                    const pathPoint = document.createElement('div');
+                    pathPoint.classList.add('tracker-path');
+                    pathPoint.style.left = `${x}px`;
+                    pathPoint.style.top = `${y}px`;
+                    tracker.appendChild(pathPoint);
+                    
+                    // Limit the number of visible points
+                    if (tracker.childElementCount > 100) {
+                        tracker.removeChild(tracker.firstChild);
+                    }
+                });
+                
+                lastMouseMoveTime = now;
             };
             
             tracker.addEventListener('mousemove', handleMouseMove);
@@ -902,6 +929,9 @@
                         clearInterval(verifyMouseInterval);
                         verifyMouseRecording = false;
                         tracker.removeEventListener('mousemove', handleMouseMove);
+                        if (animationFrameId) {
+                            cancelAnimationFrame(animationFrameId);
+                        }
                         completeVerification();
                     }
                 }, 50);
@@ -917,6 +947,9 @@
                         clearInterval(mouseInterval);
                         mouseRecording = false;
                         tracker.removeEventListener('mousemove', handleMouseMove);
+                        if (animationFrameId) {
+                            cancelAnimationFrame(animationFrameId);
+                        }
                         completeEnrollment();
                     }
                 }, 50);
