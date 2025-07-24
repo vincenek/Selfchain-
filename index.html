@@ -717,11 +717,12 @@
         let verifyTypingStartTime = 0;
         const targetPhrase = "This is me";
         let lastMouseMoveTime = 0;
-        const mouseThrottleTime = 20; // ms
+        const mouseThrottleTime = 16; // ms (60fps)
 
         // Initialize background dots
         function initBackgroundDots() {
             const dotsCount = 80;
+            backgroundDots.innerHTML = '';
             for (let i = 0; i < dotsCount; i++) {
                 const dot = document.createElement('div');
                 dot.classList.add('dot');
@@ -814,7 +815,7 @@
             }
             
             // Convert to hex and base64 for a more compact representation
-            const hexString = (hash >>> 0).toString(16);
+            const hexString = (hash >>> 0).toString(16).padStart(8, '0');
             const base64String = btoa(hexString);
             
             return base64String.substring(0, 32); // Return first 32 characters
@@ -863,8 +864,8 @@
                 lastMouseMoveTime = now;
                 
                 const rect = tracker.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+                const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
+                const y = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
                 const timestamp = Date.now();
                 
                 const dataPoint = { x, y, timestamp };
@@ -895,7 +896,7 @@
                     elapsed = Date.now() - verifyMouseStartTime;
                     const remaining = Math.max(0, duration - elapsed);
                     timer.textContent = (remaining / 1000).toFixed(1) + 's';
-                    progress.style.width = `${(elapsed / duration) * 100}%`;
+                    progress.style.width = `${Math.min(100, (elapsed / duration) * 100)}%`;
                     
                     if (elapsed >= duration) {
                         clearInterval(verifyMouseInterval);
@@ -910,7 +911,7 @@
                     elapsed = Date.now() - mouseStartTime;
                     const remaining = Math.max(0, duration - elapsed);
                     timer.textContent = (remaining / 1000).toFixed(1) + 's';
-                    progress.style.width = `${(elapsed / duration) * 100}%`;
+                    progress.style.width = `${Math.min(100, (elapsed / duration) * 100)}%`;
                     
                     if (elapsed >= duration) {
                         clearInterval(mouseInterval);
@@ -958,8 +959,19 @@
         // Complete enrollment process
         function completeEnrollment() {
             try {
+                if (typingData.length === 0 || mouseData.length === 0) {
+                    showNotification('Insufficient data for identity creation', 'error');
+                    showScreen(introScreen);
+                    return;
+                }
+                
                 // Generate signature
                 storedSignature = generateSignature(typingData, mouseData);
+                
+                if (!storedSignature) {
+                    showNotification('Failed to generate signature', 'error');
+                    return;
+                }
                 
                 // Save to localStorage
                 localStorage.setItem('selfchain_signature', storedSignature);
@@ -980,8 +992,19 @@
         // Complete verification process
         function completeVerification() {
             try {
+                if (verifyTypingData.length === 0 || verifyMouseData.length === 0) {
+                    showNotification('Insufficient data for verification', 'error');
+                    resetVerification();
+                    return;
+                }
+                
                 // Generate verification signature
                 const verifySignature = generateSignature(verifyTypingData, verifyMouseData);
+                
+                if (!verifySignature) {
+                    showNotification('Failed to generate verification signature', 'error');
+                    return;
+                }
                 
                 // Retrieve stored signature
                 const storedSig = localStorage.getItem('selfchain_signature');
@@ -1043,8 +1066,11 @@
                 a.download = `selfchain_identity_${new Date().toISOString().slice(0, 10)}.json`;
                 document.body.appendChild(a);
                 a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
+                
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 100);
                 
                 showNotification('Signature exported successfully!', 'success');
             } catch (error) {
