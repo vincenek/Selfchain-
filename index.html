@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SelfChain | Behavioral Identity Verification</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -34,42 +33,54 @@
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             overflow-x: hidden;
             position: relative;
+            padding: 20px;
         }
         
-        /* Layout */
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             width: 100%;
-            flex: 1;
+            max-width: 800px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--card-border);
         }
         
         .app-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: rgba(30, 41, 59, 0.8);
             padding: 20px;
-            background: var(--card-bg);
+            text-align: center;
             border-bottom: 1px solid var(--card-border);
         }
         
         .logo {
             display: flex;
+            justify-content: center;
             align-items: center;
             gap: 12px;
+            margin-bottom: 10px;
         }
         
         .logo-icon {
-            color: var(--secondary);
-            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
         }
         
         .logo-text {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
@@ -77,37 +88,14 @@
             -webkit-text-fill-color: transparent;
         }
         
-        .nav-controls {
-            display: flex;
-            gap: 10px;
-        }
-        
         .app-content {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 25px;
-            margin-top: 30px;
-        }
-        
-        .sidebar {
-            background: var(--sidebar);
-            border-radius: 16px;
-            padding: 25px;
-            height: fit-content;
-        }
-        
-        .main-content {
-            background: var(--card-bg);
-            border-radius: 16px;
             padding: 30px;
-            border: 1px solid var(--card-border);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
         
-        /* Typography */
         h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             margin-bottom: 15px;
+            text-align: center;
             font-weight: 700;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
@@ -120,37 +108,18 @@
             margin-bottom: 20px;
             font-weight: 600;
             color: var(--text);
-        }
-        
-        h3 {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            font-weight: 500;
-            color: var(--text);
+            text-align: center;
         }
         
         p {
             margin-bottom: 20px;
             line-height: 1.6;
             color: var(--text-muted);
+            text-align: center;
         }
         
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 25px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--card-border);
-        }
-        
-        .section-title i {
-            color: var(--secondary);
-        }
-        
-        /* Cards */
         .card {
-            background: rgba(30, 41, 59, 0.7);
+            background: rgba(15, 23, 42, 0.5);
             border: 1px solid var(--card-border);
             border-radius: 12px;
             padding: 25px;
@@ -158,13 +127,10 @@
         }
         
         .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-bottom: 20px;
+            text-align: center;
         }
         
-        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -174,22 +140,21 @@
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 12px 24px;
-            font-size: 1rem;
+            padding: 14px 28px;
+            font-size: 1.1rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
+            width: 100%;
+            max-width: 300px;
+            margin: 10px auto;
         }
         
         .btn:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-        }
-        
-        .btn i {
-            font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
         }
         
         .btn-secondary {
@@ -198,34 +163,23 @@
         
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .btn-success {
             background: var(--success);
         }
         
-        .btn-warning {
-            background: var(--warning);
-        }
-        
         .btn-error {
             background: var(--error);
         }
         
-        .btn-sm {
-            padding: 8px 16px;
-            font-size: 0.9rem;
-        }
-        
         .btn-group {
             display: flex;
-            gap: 12px;
-            margin-top: 20px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
         }
         
-        /* Form Elements */
         .input-group {
             margin-bottom: 25px;
         }
@@ -235,6 +189,7 @@
             margin-bottom: 8px;
             font-weight: 500;
             color: var(--text);
+            text-align: center;
         }
         
         input {
@@ -246,6 +201,7 @@
             color: var(--text);
             font-size: 1rem;
             font-family: 'Roboto Mono', monospace;
+            text-align: center;
         }
         
         input:focus {
@@ -256,7 +212,7 @@
         
         .fixed-phrase {
             background: rgba(15, 23, 42, 0.5);
-            border: 1px solid var(--card-border);
+            border: 1px solid var(--primary);
             border-radius: 8px;
             padding: 20px;
             margin: 20px 0;
@@ -267,26 +223,22 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
-        /* Tracker */
         .tracker-container {
             margin: 30px 0;
         }
         
         .tracker-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-align: center;
             margin-bottom: 15px;
         }
         
         .timer {
             font-family: 'Roboto Mono', monospace;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             color: var(--text);
-            background: rgba(15, 23, 42, 0.5);
-            padding: 6px 12px;
-            border-radius: 6px;
-            border: 1px solid var(--card-border);
+            text-align: center;
+            margin: 15px 0;
+            font-weight: 500;
         }
         
         .progress-container {
@@ -294,9 +246,9 @@
         }
         
         .progress-bar {
-            height: 8px;
+            height: 10px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+            border-radius: 5px;
             overflow: hidden;
         }
         
@@ -308,17 +260,14 @@
         }
         
         .tracker-box {
-            height: 250px;
-            border: 1px dashed var(--card-border);
+            height: 200px;
+            border: 2px dashed var(--primary);
             border-radius: 12px;
             position: relative;
             overflow: hidden;
             background: rgba(15, 23, 42, 0.3);
             margin-top: 15px;
             touch-action: none;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
         }
         
         .tracker-instructions {
@@ -345,23 +294,16 @@
             box-shadow: 0 0 8px rgba(76, 201, 240, 0.7);
         }
         
-        /* Mobile specific */
         .device-notice {
-            display: none;
             background: rgba(243, 156, 18, 0.1);
             border: 1px solid var(--warning);
             border-radius: 8px;
             padding: 15px;
-            margin-bottom: 20px;
+            margin: 20px 0;
             font-size: 0.9rem;
+            text-align: center;
         }
         
-        .device-notice i {
-            color: var(--warning);
-            margin-right: 8px;
-        }
-        
-        /* Results */
         .result-container {
             text-align: center;
             margin: 30px 0;
@@ -372,7 +314,7 @@
         }
         
         .result-icon {
-            font-size: 4rem;
+            font-size: 3.5rem;
             margin-bottom: 20px;
         }
         
@@ -407,138 +349,9 @@
             font-size: 0.9rem;
             max-height: 200px;
             overflow-y: auto;
-        }
-        
-        /* Navigation */
-        .nav-menu {
-            list-style: none;
-        }
-        
-        .nav-item {
-            margin-bottom: 10px;
-        }
-        
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 15px;
-            border-radius: 8px;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-link:hover, .nav-link.active {
-            background: rgba(67, 97, 238, 0.1);
-            color: var(--text);
-        }
-        
-        .nav-link i {
-            width: 20px;
             text-align: center;
         }
         
-        /* Footer */
-        .app-footer {
-            text-align: center;
-            padding: 25px;
-            margin-top: 50px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--card-border);
-        }
-        
-        /* Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-card {
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .stat-label {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-        
-        /* Responsive */
-        @media (max-width: 900px) {
-            .app-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .sidebar {
-                display: none;
-            }
-            
-            .container {
-                padding: 15px;
-            }
-            
-            .app-header {
-                padding: 15px;
-            }
-        }
-        
-        @media (max-width: 600px) {
-            .btn-group {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            .fixed-phrase {
-                font-size: 1.1rem;
-                padding: 15px;
-            }
-            
-            .device-notice {
-                display: flex;
-            }
-            
-            .tracker-box {
-                height: 200px;
-            }
-            
-            .result-icon {
-                font-size: 3rem;
-            }
-            
-            .result-title {
-                font-size: 1.5rem;
-            }
-        }
-        
-        /* Screen states */
         .screen {
             display: none;
         }
@@ -552,266 +365,209 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        .app-footer {
+            text-align: center;
+            padding: 25px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--card-border);
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 12px;
+            }
+            
+            .app-content {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .fixed-phrase {
+                font-size: 1.1rem;
+                padding: 15px;
+            }
+            
+            .tracker-box {
+                height: 180px;
+            }
+        }
     </style>
 </head>
 <body>
-    <header class="app-header">
-        <div class="logo">
-            <i class="fas fa-fingerprint logo-icon"></i>
-            <span class="logo-text">SelfChain</span>
-        </div>
-        <div class="nav-controls">
-            <button class="btn btn-sm btn-secondary" id="helpBtn">
-                <i class="fas fa-question-circle"></i> Help
-            </button>
-        </div>
-    </header>
-    
     <div class="container">
+        <div class="app-header">
+            <div class="logo">
+                <div class="logo-icon">S</div>
+                <div class="logo-text">SelfChain</div>
+            </div>
+            <p>Behavioral Identity Verification</p>
+        </div>
+        
         <div class="app-content">
-            <aside class="sidebar">
-                <h3>Identity Management</h3>
-                <ul class="nav-menu">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link active" data-target="introScreen">
-                            <i class="fas fa-home"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" data-target="enrollScreen">
-                            <i class="fas fa-id-card"></i> Create Identity
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" data-target="verifyScreen">
-                            <i class="fas fa-user-check"></i> Verify Identity
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" data-target="identityCreatedScreen">
-                            <i class="fas fa-key"></i> My Signature
-                        </a>
-                    </li>
-                </ul>
-                
-                <div class="card" style="margin-top: 30px;">
-                    <h3>Security Status</h3>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-value">98%</div>
-                            <div class="stat-label">Accuracy</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">256-bit</div>
-                            <div class="stat-label">Encryption</div>
-                        </div>
-                    </div>
-                    <p>Your behavioral data is stored securely on your device and never leaves your browser.</p>
-                </div>
-            </aside>
+            <!-- Mobile notice -->
+            <div class="device-notice">
+                For best results, use your finger to create movement patterns on mobile devices
+            </div>
             
-            <main class="main-content">
-                <!-- Mobile notice -->
-                <div class="device-notice">
-                    <i class="fas fa-mobile-alt"></i>
-                    <span>For best results, use your finger to create movement patterns on mobile devices</span>
+            <!-- Intro Screen -->
+            <div id="introScreen" class="screen active">
+                <h1>Become Your Digital Signature</h1>
+                <p>SelfChain creates a unique identity based on your typing patterns and movement behavior.</p>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2>How It Works</h2>
+                    </div>
+                    <p>1. Type a specific phrase to capture your unique typing rhythm</p>
+                    <p>2. Move your cursor/finger to record your movement patterns</p>
+                    <p>3. Your combined behavior creates a unique digital identity</p>
                 </div>
                 
-                <!-- Intro Screen -->
-                <div id="introScreen" class="screen active">
-                    <div class="section-title">
-                        <i class="fas fa-home"></i>
-                        <h1>Behavioral Identity Verification</h1>
+                <div class="btn-group">
+                    <button id="createIdentityBtn" class="btn">
+                        Create My Identity
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Enrollment Screen -->
+            <div id="enrollScreen" class="screen">
+                <h1>Create Your Identity</h1>
+                <p>Create your unique behavioral signature by completing the steps below</p>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Step 1: Type the Passphrase</h2>
                     </div>
-                    
-                    <p>SelfChain creates a unique digital identity based on your typing patterns and movement behavior. This biometric signature becomes your personal key for secure authentication.</p>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>How It Works</h2>
-                        </div>
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <i class="fas fa-keyboard fa-2x" style="color: #4cc9f0; margin-bottom: 15px;"></i>
-                                <h3>Typing Pattern</h3>
-                                <p>We measure the unique rhythm of your keystrokes</p>
-                            </div>
-                            <div class="stat-card">
-                                <i class="fas fa-mobile-alt fa-2x" style="color: #4361ee; margin-bottom: 15px;"></i>
-                                <h3>Movement Behavior</h3>
-                                <p>We analyze your natural movement patterns</p>
-                            </div>
-                            <div class="stat-card">
-                                <i class="fas fa-fingerprint fa-2x" style="color: #2ecc71; margin-bottom: 15px;"></i>
-                                <h3>Unique Signature</h3>
-                                <p>Combined data creates your behavioral identity</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="btn-group">
-                        <button id="createIdentityBtn" class="btn">
-                            <i class="fas fa-id-card"></i> Create Identity
-                        </button>
-                        <button id="learnMoreBtn" class="btn btn-secondary">
-                            <i class="fas fa-book"></i> Learn More
-                        </button>
+                    <div class="fixed-phrase">This is me</div>
+                    <div class="input-group">
+                        <input type="text" id="phraseInput" placeholder="Type the phrase above" autocomplete="off">
                     </div>
                 </div>
                 
-                <!-- Enrollment Screen -->
-                <div id="enrollScreen" class="screen">
-                    <div class="section-title">
-                        <i class="fas fa-id-card"></i>
-                        <h1>Create Your Identity</h1>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Step 2: Movement Pattern</h2>
                     </div>
-                    
-                    <p>Create your unique behavioral signature by completing the following steps:</p>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Step 1: Type the Passphrase</h2>
+                    <div class="tracker-container">
+                        <div class="tracker-header">
+                            <h3>Move your cursor/finger in the box below</h3>
+                            <div class="timer" id="mouseTimer">Ready when you start typing</div>
                         </div>
-                        <div class="fixed-phrase">This is me</div>
-                        <div class="input-group">
-                            <label class="input-label">Type the phrase exactly as shown:</label>
-                            <input type="text" id="phraseInput" placeholder="Type 'This is me' to begin" autocomplete="off">
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Step 2: Movement Pattern</h2>
-                        </div>
-                        <div class="tracker-container">
-                            <div class="tracker-header">
-                                <h3>Move your cursor/finger naturally in the box below</h3>
-                                <div class="timer" id="mouseTimer">5.0s</div>
-                            </div>
-                            <div class="progress-container">
-                                <div class="progress-bar">
-                                    <div class="progress" id="mouseProgress"></div>
-                                </div>
-                            </div>
-                            <div class="tracker-box" id="mouseTracker">
-                                <div class="tracker-instructions">Move your cursor or finger in this area</div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress" id="mouseProgress"></div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="btn-group">
-                        <button id="cancelEnrollBtn" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Back
-                        </button>
-                        <button id="generateSignatureBtn" class="btn">
-                            <i class="fas fa-fingerprint"></i> Generate Identity
-                        </button>
+                        <div class="tracker-box" id="mouseTracker">
+                            <div class="tracker-instructions">Move here to create your movement pattern</div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Verification Screen -->
-                <div id="verifyScreen" class="screen">
-                    <div class="section-title">
-                        <i class="fas fa-user-check"></i>
-                        <h1>Verify Your Identity</h1>
+                <div class="btn-group">
+                    <button id="cancelEnrollBtn" class="btn btn-secondary">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Verification Screen -->
+            <div id="verifyScreen" class="screen">
+                <h1>Verify Your Identity</h1>
+                <p>Recreate your behavioral signature to verify your identity</p>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Step 1: Type the Passphrase</h2>
                     </div>
-                    
-                    <p>Verify your identity by recreating your behavioral signature.</p>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Step 1: Type the Passphrase</h2>
-                        </div>
-                        <div class="fixed-phrase">This is me</div>
-                        <div class="input-group">
-                            <label class="input-label">Type the phrase exactly as shown:</label>
-                            <input type="text" id="verifyPhraseInput" placeholder="Type 'This is me' to verify" autocomplete="off">
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Step 2: Movement Pattern</h2>
-                        </div>
-                        <div class="tracker-container">
-                            <div class="tracker-header">
-                                <h3>Move your cursor/finger naturally in the box below</h3>
-                                <div class="timer" id="verifyMouseTimer">5.0s</div>
-                            </div>
-                            <div class="progress-container">
-                                <div class="progress-bar">
-                                    <div class="progress" id="verifyMouseProgress"></div>
-                                </div>
-                            </div>
-                            <div class="tracker-box" id="verifyMouseTracker">
-                                <div class="tracker-instructions">Move your cursor or finger in this area</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="verificationResult" class="result-container">
-                        <!-- Results will be displayed here -->
-                    </div>
-                    
-                    <div class="btn-group">
-                        <button id="verifyBtn" class="btn">
-                            <i class="fas fa-check-circle"></i> Verify Identity
-                        </button>
-                        <button id="resetBtn" class="btn btn-error">
-                            <i class="fas fa-trash-alt"></i> Reset Identity
-                        </button>
-                        <button id="exportBtn" class="btn btn-secondary">
-                            <i class="fas fa-download"></i> Export Signature
-                        </button>
+                    <div class="fixed-phrase">This is me</div>
+                    <div class="input-group">
+                        <input type="text" id="verifyPhraseInput" placeholder="Type the phrase above" autocomplete="off">
                     </div>
                 </div>
                 
-                <!-- Identity Created Screen -->
-                <div id="identityCreatedScreen" class="screen">
-                    <div class="section-title">
-                        <i class="fas fa-key"></i>
-                        <h1>Your Digital Identity</h1>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Step 2: Movement Pattern</h2>
                     </div>
-                    
-                    <div class="result-container success">
-                        <i class="fas fa-check-circle result-icon"></i>
-                        <h2 class="result-title">Identity Created Successfully</h2>
-                        <p class="result-text">Your unique behavioral signature has been generated and stored securely on this device.</p>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Your Behavioral Signature</h2>
-                            <button id="copySignatureBtn" class="btn btn-sm btn-secondary">
-                                <i class="fas fa-copy"></i> Copy
-                            </button>
+                    <div class="tracker-container">
+                        <div class="tracker-header">
+                            <h3>Move your cursor/finger in the box below</h3>
+                            <div class="timer" id="verifyMouseTimer">Ready when you start typing</div>
                         </div>
-                        <div class="signature-display" id="signatureDisplay">
-                            <!-- Signature will be displayed here -->
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress" id="verifyMouseProgress"></div>
+                            </div>
                         </div>
-                        <p>This unique identifier is generated from your typing rhythm and movement patterns. It's stored locally on this device and never transmitted to any server.</p>
-                    </div>
-                    
-                    <div class="btn-group">
-                        <button id="goToVerifyBtn" class="btn">
-                            <i class="fas fa-user-check"></i> Verify Identity
-                        </button>
-                        <button id="exportAfterCreateBtn" class="btn btn-secondary">
-                            <i class="fas fa-download"></i> Export Signature
-                        </button>
-                        <button id="resetAfterCreateBtn" class="btn btn-error">
-                            <i class="fas fa-trash-alt"></i> Reset Identity
-                        </button>
+                        <div class="tracker-box" id="verifyMouseTracker">
+                            <div class="tracker-instructions">Move here to verify your movement pattern</div>
+                        </div>
                     </div>
                 </div>
-            </main>
+                
+                <div id="verificationResult" class="result-container">
+                    <!-- Results will be displayed here -->
+                </div>
+                
+                <div class="btn-group">
+                    <button id="verifyBtn" class="btn">
+                        Verify Identity
+                    </button>
+                    <button id="resetBtn" class="btn btn-error">
+                        Reset Identity
+                    </button>
+                    <button id="exportBtn" class="btn btn-secondary">
+                        Export Signature
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Identity Created Screen -->
+            <div id="identityCreatedScreen" class="screen">
+                <h1>Identity Created!</h1>
+                
+                <div class="result-container success">
+                    <div class="result-icon">✓</div>
+                    <h2 class="result-title">Your Identity is Ready</h2>
+                    <p class="result-text">Your unique behavioral signature has been generated and stored securely on this device.</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Your Behavioral Signature</h2>
+                    </div>
+                    <div class="signature-display" id="signatureDisplay">
+                        <!-- Signature will be displayed here -->
+                    </div>
+                    <p>This identifier is generated from your typing rhythm and movement patterns.</p>
+                </div>
+                
+                <div class="btn-group">
+                    <button id="goToVerifyBtn" class="btn">
+                        Verify Identity
+                    </button>
+                    <button id="exportAfterCreateBtn" class="btn btn-secondary">
+                        Export Signature
+                    </button>
+                    <button id="resetAfterCreateBtn" class="btn btn-error">
+                        Reset Identity
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="app-footer">
+            <p>Your data is stored locally and never leaves your device</p>
+            <p>© 2023 SelfChain Technologies</p>
         </div>
     </div>
-    
-    <footer class="app-footer">
-        <p>© 2023 SelfChain Technologies. All rights reserved. | Your privacy is our priority</p>
-        <p>Behavioral data is stored locally and never leaves your device.</p>
-    </footer>
 
     <script>
         // DOM Elements
@@ -820,16 +576,13 @@
         const verifyScreen = document.getElementById('verifyScreen');
         const identityCreatedScreen = document.getElementById('identityCreatedScreen');
         const createIdentityBtn = document.getElementById('createIdentityBtn');
-        const learnMoreBtn = document.getElementById('learnMoreBtn');
         const cancelEnrollBtn = document.getElementById('cancelEnrollBtn');
-        const generateSignatureBtn = document.getElementById('generateSignatureBtn');
         const verifyBtn = document.getElementById('verifyBtn');
         const resetBtn = document.getElementById('resetBtn');
         const exportBtn = document.getElementById('exportBtn');
         const goToVerifyBtn = document.getElementById('goToVerifyBtn');
         const exportAfterCreateBtn = document.getElementById('exportAfterCreateBtn');
         const resetAfterCreateBtn = document.getElementById('resetAfterCreateBtn');
-        const copySignatureBtn = document.getElementById('copySignatureBtn');
         const phraseInput = document.getElementById('phraseInput');
         const verifyPhraseInput = document.getElementById('verifyPhraseInput');
         const mouseTracker = document.getElementById('mouseTracker');
@@ -840,8 +593,6 @@
         const verifyMouseProgress = document.getElementById('verifyMouseProgress');
         const signatureDisplay = document.getElementById('signatureDisplay');
         const verificationResult = document.getElementById('verificationResult');
-        const helpBtn = document.getElementById('helpBtn');
-        const navLinks = document.querySelectorAll('.nav-link');
         
         // State variables
         let mouseData = [];
@@ -858,31 +609,13 @@
         let verifyTypingStartTime = 0;
         const targetPhrase = "This is me";
         
-        // Navigation
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetScreen = document.getElementById(link.dataset.target);
-                
-                // Reset states when navigating
-                resetEnrollment();
-                resetVerification();
-                
-                navLinks.forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-                
-                showScreen(targetScreen);
-            });
-        });
-        
         // Show specific screen
         function showScreen(screen) {
-            // Hide all screens
-            [introScreen, enrollScreen, verifyScreen, identityCreatedScreen].forEach(s => {
-                s.classList.remove('active');
-            });
+            introScreen.classList.remove('active');
+            enrollScreen.classList.remove('active');
+            verifyScreen.classList.remove('active');
+            identityCreatedScreen.classList.remove('active');
             
-            // Show the requested screen
             screen.classList.add('active');
         }
         
@@ -891,7 +624,7 @@
             mouseData = [];
             typingData = [];
             if (phraseInput) phraseInput.value = '';
-            if (mouseTimer) mouseTimer.textContent = '5.0s';
+            if (mouseTimer) mouseTimer.textContent = 'Ready when you start typing';
             if (mouseProgress) mouseProgress.style.width = '0%';
             
             // Clear any existing paths
@@ -909,7 +642,7 @@
             verifyMouseData = [];
             verifyTypingData = [];
             if (verifyPhraseInput) verifyPhraseInput.value = '';
-            if (verifyMouseTimer) verifyMouseTimer.textContent = '5.0s';
+            if (verifyMouseTimer) verifyMouseTimer.textContent = 'Ready when you start typing';
             if (verifyMouseProgress) verifyMouseProgress.style.width = '0%';
             if (verificationResult) {
                 verificationResult.textContent = '';
@@ -1044,7 +777,7 @@
                 verifyMouseInterval = setInterval(() => {
                     elapsed = Date.now() - verifyMouseStartTime;
                     const remaining = Math.max(0, duration - elapsed);
-                    timer.textContent = (remaining / 1000).toFixed(1) + 's';
+                    timer.textContent = (remaining / 1000).toFixed(1) + 's remaining';
                     progress.style.width = `${(elapsed / duration) * 100}%`;
                     
                     if (elapsed >= duration) {
@@ -1052,6 +785,7 @@
                         verifyMouseRecording = false;
                         tracker.removeEventListener('mousemove', handleMouseMove);
                         tracker.removeEventListener('touchmove', handleTouchMove);
+                        completeVerification();
                     }
                 }, 50);
             } else {
@@ -1059,7 +793,7 @@
                 mouseInterval = setInterval(() => {
                     elapsed = Date.now() - mouseStartTime;
                     const remaining = Math.max(0, duration - elapsed);
-                    timer.textContent = (remaining / 1000).toFixed(1) + 's';
+                    timer.textContent = (remaining / 1000).toFixed(1) + 's remaining';
                     progress.style.width = `${(elapsed / duration) * 100}%`;
                     
                     if (elapsed >= duration) {
@@ -1067,6 +801,7 @@
                         mouseRecording = false;
                         tracker.removeEventListener('mousemove', handleMouseMove);
                         tracker.removeEventListener('touchmove', handleTouchMove);
+                        completeEnrollment();
                     }
                 }, 50);
             }
@@ -1107,18 +842,6 @@
         
         // Complete enrollment process
         function completeEnrollment() {
-            // Validate the typed phrase
-            if (phraseInput.value !== targetPhrase) {
-                alert('Please type the phrase exactly as shown: "This is me"');
-                return;
-            }
-            
-            // Validate we have both typing and mouse data
-            if (typingData.length === 0 || mouseData.length === 0) {
-                alert('Please complete both typing and movement steps');
-                return;
-            }
-
             // Generate signature
             const signature = generateSignature(typingData, mouseData);
             
@@ -1127,10 +850,6 @@
             
             // Display signature
             signatureDisplay.textContent = signature;
-            
-            // Update navigation
-            navLinks.forEach(link => link.classList.remove('active'));
-            document.querySelector('[data-target="identityCreatedScreen"]').classList.add('active');
             
             // Show identity created screen
             showScreen(identityCreatedScreen);
@@ -1144,34 +863,14 @@
             // Retrieve stored signature
             const storedSig = localStorage.getItem('selfchain_signature');
             
-            if (!storedSig) {
-                verificationResult.innerHTML = '';
-                verificationResult.classList.add('error');
-                
-                const resultIcon = document.createElement('i');
-                resultIcon.classList.add('fas', 'fa-exclamation-triangle', 'result-icon');
-                
-                const resultTitle = document.createElement('h2');
-                resultTitle.classList.add('result-title');
-                resultTitle.textContent = 'No Identity Found';
-                
-                const resultText = document.createElement('p');
-                resultText.classList.add('result-text');
-                resultText.textContent = 'Please create an identity first before verifying.';
-                
-                verificationResult.appendChild(resultIcon);
-                verificationResult.appendChild(resultTitle);
-                verificationResult.appendChild(resultText);
-                return;
-            }
-            
             // Calculate similarity
             const similarity = calculateSimilarity(storedSig, verifySignature);
             
             // Display result
             verificationResult.innerHTML = '';
             
-            const resultIcon = document.createElement('i');
+            const resultIcon = document.createElement('div');
+            resultIcon.classList.add('result-icon');
             const resultTitle = document.createElement('h2');
             resultTitle.classList.add('result-title');
             const resultText = document.createElement('p');
@@ -1179,12 +878,12 @@
             
             if (similarity >= 85) {
                 verificationResult.classList.add('success');
-                resultIcon.classList.add('fas', 'fa-check-circle', 'result-icon');
+                resultIcon.textContent = '✓';
                 resultTitle.textContent = `Access Granted (${similarity.toFixed(1)}% match)`;
                 resultText.textContent = 'Your behavioral signature matches successfully. Identity verified.';
             } else {
                 verificationResult.classList.add('error');
-                resultIcon.classList.add('fas', 'fa-times-circle', 'result-icon');
+                resultIcon.textContent = '✗';
                 resultTitle.textContent = `Access Denied (${similarity.toFixed(1)}% match)`;
                 resultText.textContent = 'Behavioral signature does not match. Please try again.';
             }
@@ -1221,75 +920,29 @@
             URL.revokeObjectURL(url);
         }
         
-        // Copy signature to clipboard
-        function copySignature() {
-            const signature = localStorage.getItem('selfchain_signature');
-            if (!signature) return;
-            
-            navigator.clipboard.writeText(signature).then(() => {
-                // Show feedback
-                const originalText = copySignatureBtn.innerHTML;
-                copySignatureBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                
-                setTimeout(() => {
-                    copySignatureBtn.innerHTML = originalText;
-                }, 2000);
-            });
-        }
-        
         // Reset identity
         function resetIdentity() {
             if (confirm('Are you sure you want to reset your identity? This will delete your stored signature and cannot be undone.')) {
                 localStorage.removeItem('selfchain_signature');
                 resetEnrollment();
                 resetVerification();
-                
-                // Update navigation
-                navLinks.forEach(link => link.classList.remove('active'));
-                document.querySelector('[data-target="introScreen"]').classList.add('active');
-                
                 showScreen(introScreen);
             }
-        }
-        
-        // Show help information
-        function showHelp() {
-            alert("SelfChain Help:\n\n1. Create Identity: Establish your unique behavioral signature\n2. Verify Identity: Confirm your identity using your behavior\n3. Reset Identity: Delete your stored signature\n4. Export: Save your signature for backup");
         }
         
         // Event Listeners
         createIdentityBtn.addEventListener('click', () => {
             resetEnrollment();
-            
-            // Update navigation
-            navLinks.forEach(link => link.classList.remove('active'));
-            document.querySelector('[data-target="enrollScreen"]').classList.add('active');
-            
             showScreen(enrollScreen);
             setTimeout(() => {
                 if (phraseInput) phraseInput.focus();
             }, 300);
         });
         
-        learnMoreBtn.addEventListener('click', () => {
-            // Update navigation
-            navLinks.forEach(link => link.classList.remove('active'));
-            showScreen(introScreen);
-        });
-        
-        helpBtn.addEventListener('click', showHelp);
-        
         cancelEnrollBtn.addEventListener('click', () => {
             resetEnrollment();
-            
-            // Update navigation
-            navLinks.forEach(link => link.classList.remove('active'));
-            document.querySelector('[data-target="introScreen"]').classList.add('active');
-            
             showScreen(introScreen);
         });
-        
-        generateSignatureBtn.addEventListener('click', completeEnrollment);
         
         if (phraseInput) {
             phraseInput.addEventListener('focus', () => {
@@ -1299,6 +952,7 @@
             phraseInput.addEventListener('input', () => {
                 if (phraseInput.value.length === 1) {
                     typingStartTime = Date.now();
+                    mouseTimer.textContent = '5.0s remaining';
                 }
                 
                 analyzeTyping(phraseInput.value, targetPhrase, typingStartTime);
@@ -1318,6 +972,7 @@
             verifyPhraseInput.addEventListener('input', () => {
                 if (verifyPhraseInput.value.length === 1) {
                     verifyTypingStartTime = Date.now();
+                    verifyMouseTimer.textContent = '5.0s remaining';
                 }
                 
                 analyzeTyping(verifyPhraseInput.value, targetPhrase, verifyTypingStartTime, true);
@@ -1329,8 +984,6 @@
                 if (!verifyMouseRecording) {
                     resetVerification();
                     startMovementRecording(true);
-                } else {
-                    completeVerification();
                 }
             });
         }
@@ -1343,29 +996,14 @@
         if (goToVerifyBtn) {
             goToVerifyBtn.addEventListener('click', () => {
                 resetVerification();
-                
-                // Update navigation
-                navLinks.forEach(link => link.classList.remove('active'));
-                document.querySelector('[data-target="verifyScreen"]').classList.add('active');
-                
                 showScreen(verifyScreen);
             });
-        }
-        
-        if (copySignatureBtn) {
-            copySignatureBtn.addEventListener('click', copySignature);
         }
         
         // Check for existing identity on load
         window.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('selfchain_signature')) {
-                // Update navigation
-                navLinks.forEach(link => link.classList.remove('active'));
-                document.querySelector('[data-target="identityCreatedScreen"]').classList.add('active');
-                
-                // Show identity created screen
-                signatureDisplay.textContent = localStorage.getItem('selfchain_signature');
-                showScreen(identityCreatedScreen);
+                showScreen(verifyScreen);
             } else {
                 showScreen(introScreen);
             }
