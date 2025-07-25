@@ -579,6 +579,124 @@
             transform: translateY(-3px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+        
+        .feature-card {
+            background: rgba(30, 30, 46, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid rgba(77, 171, 247, 0.2);
+        }
+        
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .feature-card p {
+            text-align: left;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+        
+        .typing-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background: rgba(30, 30, 46, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+            border: 1px solid rgba(77, 171, 247, 0.2);
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .security-level {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            padding: 10px;
+            background: rgba(30, 30, 46, 0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(77, 171, 247, 0.2);
+        }
+        
+        .security-level .level-bar {
+            height: 12px;
+            background: rgba(77, 171, 247, 0.2);
+            border-radius: 6px;
+            flex: 1;
+            overflow: hidden;
+            margin: 0 15px;
+        }
+        
+        .security-level .level-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 6px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .security-level .level-text {
+            min-width: 80px;
+            text-align: right;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .typing-rhythm {
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+            height: 100px;
+            position: relative;
+        }
+        
+        .rhythm-bar {
+            width: 8px;
+            background: var(--primary);
+            margin: 0 2px;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.2s ease;
+        }
+        
+        .instructions {
+            background: rgba(77, 171, 247, 0.1);
+            border-left: 3px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
@@ -595,8 +713,22 @@
                 <span>SelfChain</span>
             </div>
             <h1>Become Your Digital Signature</h1>
-            <p>Create a unique identity signature based solely on your typing patterns.</p>
-            <p>Your typing rhythm becomes your personal key to digital identity verification.</p>
+            <p>Create a unique identity signature based solely on your typing patterns. Your typing rhythm becomes your personal key to digital identity verification.</p>
+            
+            <div class="feature-card">
+                <h3>How It Works</h3>
+                <p>SelfChain analyzes the unique rhythm of your typing to create a digital signature that identifies you. Unlike passwords, your typing pattern is nearly impossible to replicate.</p>
+            </div>
+            
+            <div class="feature-card">
+                <h3>Key Benefits</h3>
+                <ul>
+                    <li>No passwords to remember</li>
+                    <li>Biometric-level security</li>
+                    <li>Impossible to steal or replicate</li>
+                    <li>Completely private - data stays on your device</li>
+                </ul>
+            </div>
             
             <div class="button-group">
                 <button id="createIdentityBtn">Create My Identity</button>
@@ -606,7 +738,7 @@
         <!-- Enrollment Screen -->
         <div id="enrollScreen" class="screen">
             <h2>Create Your Identity</h2>
-            <p>Type the phrase below naturally for 10 seconds.</p>
+            <p>Type the phrase below naturally for 10 seconds. Your unique typing rhythm will be captured.</p>
             
             <div class="fixed-phrase">This is me</div>
             
@@ -627,6 +759,15 @@
                 <div class="key">E</div>
             </div>
             
+            <div class="instructions">
+                <p><strong>Important:</strong></p>
+                <ul>
+                    <li>Type naturally at your normal speed</li>
+                    <li>Don't try to type perfectly - your rhythm matters</li>
+                    <li>Complete the phrase multiple times if possible</li>
+                </ul>
+            </div>
+            
             <div class="timer" id="typingTimer">10.0s</div>
             <div class="progress-bar">
                 <div class="progress" id="typingProgress"></div>
@@ -640,7 +781,7 @@
         <!-- Verification Screen -->
         <div id="verifyScreen" class="screen">
             <h2>Verify Your Identity</h2>
-            <p>Type the phrase below naturally for 10 seconds.</p>
+            <p>Type the phrase below naturally. Your typing rhythm will be compared to your stored signature.</p>
             
             <div class="fixed-phrase">This is me</div>
             
@@ -661,6 +802,8 @@
                 <div class="key">E</div>
             </div>
             
+            <div class="typing-rhythm" id="typingRhythm"></div>
+            
             <div class="timer" id="verifyTypingTimer">10.0s</div>
             <div class="progress-bar">
                 <div class="progress" id="verifyTypingProgress"></div>
@@ -680,6 +823,29 @@
             <p>Your unique typing signature has been generated and stored locally.</p>
             
             <div class="signature-display" id="signatureDisplay"></div>
+            
+            <div class="security-level">
+                <span>Security Level:</span>
+                <div class="level-bar">
+                    <div class="level-fill" id="securityLevel"></div>
+                </div>
+                <div class="level-text" id="securityText">Calculating...</div>
+            </div>
+            
+            <div class="typing-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="avgSpeed">0ms</div>
+                    <div class="stat-label">Avg. Speed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="variance">0ms</div>
+                    <div class="stat-label">Variance</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="accuracy">0%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+            </div>
             
             <p>You can now verify your identity using your unique typing patterns.</p>
             
@@ -713,6 +879,12 @@
         const backgroundDots = document.getElementById('backgroundDots');
         const notification = document.getElementById('notification');
         const keys = document.querySelectorAll('.key');
+        const securityLevel = document.getElementById('securityLevel');
+        const securityText = document.getElementById('securityText');
+        const avgSpeed = document.getElementById('avgSpeed');
+        const variance = document.getElementById('variance');
+        const accuracy = document.getElementById('accuracy');
+        const typingRhythm = document.getElementById('typingRhythm');
         
         // State variables
         let storedSignature = null;
@@ -727,6 +899,8 @@
         let verificationAttempts = 0;
         const MAX_ATTEMPTS = 5;
         let lockoutUntil = 0;
+        let rhythmInterval = null;
+        let rhythmBars = [];
 
         // Initialize background dots
         function initBackgroundDots() {
@@ -743,6 +917,29 @@
                 dot.style.height = dot.style.width;
                 backgroundDots.appendChild(dot);
             }
+        }
+        
+        // Initialize typing rhythm visualization
+        function initTypingRhythm() {
+            typingRhythm.innerHTML = '';
+            rhythmBars = [];
+            for (let i = 0; i < 20; i++) {
+                const bar = document.createElement('div');
+                bar.classList.add('rhythm-bar');
+                bar.style.height = `${5 + Math.random() * 20}px`;
+                rhythmBars.push(bar);
+                typingRhythm.appendChild(bar);
+            }
+            
+            // Start animation
+            if (rhythmInterval) clearInterval(rhythmInterval);
+            rhythmInterval = setInterval(() => {
+                rhythmBars.forEach(bar => {
+                    const newHeight = 5 + Math.random() * 80;
+                    bar.style.height = `${newHeight}px`;
+                    bar.style.background = `hsl(${200 + Math.random() * 40}, 80%, 60%)`;
+                });
+            }, 150);
         }
         
         // Show notification
@@ -770,6 +967,9 @@
             
             setTimeout(() => {
                 screen.classList.add('active');
+                if (screen === verifyScreen) {
+                    initTypingRhythm();
+                }
             }, 10);
         }
         
@@ -838,20 +1038,30 @@
             return pattern;
         }
         
-        // Generate a unique signature from typing data
+        // Enhanced signature generation using multiple metrics
         function generateSignature(typingPattern) {
             if (typingPattern.length < 5) {
                 showNotification('Type more characters to create a strong identity', 'warning');
                 throw new Error('Insufficient typing data');
             }
             
-            // Create a simple hash from the data
-            const dataString = JSON.stringify({
-                intervals: typingPattern.map(p => p.timeDiff),
-                accuracy: typingPattern.filter(p => p.isCorrect).length / typingPattern.length,
-                variance: typingPattern.reduce((sum, p) => sum + Math.pow(p.timeDiff, 2), 0) / typingPattern.length
-            });
+            // Calculate metrics for signature strength
+            const intervals = typingPattern.map(p => p.timeDiff).filter(t => t > 0);
+            const accuracy = typingPattern.filter(p => p.isCorrect).length / typingPattern.length;
+            const avgInterval = intervals.reduce((sum, t) => sum + t, 0) / intervals.length;
+            const variance = intervals.reduce((sum, t) => sum + Math.pow(t - avgInterval, 2), 0) / intervals.length;
             
+            // Create a robust signature using multiple metrics
+            const data = {
+                intervals: intervals,
+                accuracy: accuracy,
+                avgInterval: avgInterval,
+                variance: variance,
+                patternLength: typingPattern.length
+            };
+            
+            // Create a unique hash from the data
+            const dataString = JSON.stringify(data);
             let hash = 0;
             
             if (dataString.length === 0) return '';
@@ -866,7 +1076,14 @@
             const hexString = (hash >>> 0).toString(16).padStart(8, '0');
             const base64String = btoa(hexString);
             
-            return base64String.substring(0, 32); // Return first 32 characters
+            return {
+                signature: base64String.substring(0, 32),
+                metrics: {
+                    avgInterval,
+                    variance,
+                    accuracy: accuracy * 100
+                }
+            };
         }
         
         // Calculate similarity between two signatures
@@ -920,19 +1137,37 @@
         // Complete enrollment process
         function completeEnrollment() {
             try {
-                // Generate signature
-                storedSignature = generateSignature(typingData);
+                // Generate signature with metrics
+                const signatureData = generateSignature(typingData);
                 
-                if (!storedSignature) {
+                if (!signatureData.signature) {
                     showNotification('Failed to generate signature', 'error');
                     return;
                 }
+                
+                storedSignature = signatureData.signature;
                 
                 // Save to localStorage
                 localStorage.setItem('selfchain_signature', storedSignature);
                 
                 // Display signature
                 signatureDisplay.textContent = storedSignature;
+                
+                // Update metrics display
+                avgSpeed.textContent = `${signatureData.metrics.avgInterval.toFixed(0)}ms`;
+                variance.textContent = `${signatureData.metrics.variance.toFixed(0)}ms`;
+                accuracy.textContent = `${signatureData.metrics.accuracy.toFixed(1)}%`;
+                
+                // Calculate security level
+                const securityScore = Math.min(100, 
+                    signatureData.metrics.accuracy * 0.6 + 
+                    (100 - Math.min(100, signatureData.metrics.variance / 10)) * 0.4
+                );
+                
+                securityLevel.style.width = `${securityScore}%`;
+                securityText.textContent = securityScore >= 80 ? 'Strong' : 
+                                          securityScore >= 60 ? 'Good' : 
+                                          securityScore >= 40 ? 'Fair' : 'Weak';
                 
                 // Show identity created screen
                 showScreen(identityCreatedScreen);
@@ -958,7 +1193,8 @@
                 }
                 
                 // Generate verification signature
-                const verifySignature = generateSignature(verifyTypingData);
+                const verifySignatureData = generateSignature(verifyTypingData);
+                const verifySignature = verifySignatureData.signature;
                 
                 if (!verifySignature) {
                     showNotification('Failed to generate verification signature', 'error');
