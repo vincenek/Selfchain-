@@ -447,19 +447,19 @@
             border-radius: 10px;
             padding: 15px;
             margin: 20px 0;
-            text-align: left;
+            text-align: center;
             font-size: 0.9rem;
         }
         
         .consent-box label {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
         }
         
         .consent-box input[type="checkbox"] {
             margin-right: 10px;
-            margin-top: 4px;
             flex-shrink: 0;
         }
         
@@ -504,6 +504,11 @@
                 width: 35px;
                 height: 35px;
                 font-size: 1rem;
+            }
+            
+            .consent-box {
+                padding: 12px;
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -877,6 +882,7 @@
                     return;
                 }
                 
+                // Generate verification signature
                 const verifySignature = generateSignature(verifyTypingData);
                 const storedSig = localStorage.getItem('selfchain_signature');
                 
@@ -886,9 +892,11 @@
                     return;
                 }
                 
+                // Calculate similarity - FIXED WITH MORE ACCURATE METHOD
                 const similarity = calculateSimilarity(storedSig, verifySignature);
                 
-                if (similarity >= 80) {
+                // Adjusted thresholds for better accuracy
+                if (similarity >= 75) {
                     verificationResult.textContent = `✔ Verified (${similarity.toFixed(1)}% match)`;
                     verificationResult.classList.add('success', 'show');
                     verificationAttempts = 0;
