@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="SelfChain - Create a unique digital identity based on your typing patterns">
-    <title>SelfChain: Become Your Digital Signature</title>
+    <meta name="description" content="SelfChain v2 - Create a unique digital identity based on your typing patterns">
+    <title>SelfChain v2: Become Your Digital Signature</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔒</text></svg>">
     <style>
@@ -477,109 +477,6 @@
             border-left-color: var(--warning);
         }
         
-        /* Mobile-specific optimizations */
-        @media (max-width: 480px) {
-            body {
-                padding: 15px;
-            }
-            
-            .container {
-                padding: 25px 20px;
-                border-radius: 14px;
-                max-height: 85vh;
-            }
-            
-            .button-group {
-                flex-direction: column;
-                gap: 12px;
-            }
-            
-            button {
-                width: 100%;
-                max-width: 100%;
-                padding: 16px;
-                min-width: auto;
-            }
-            
-            .fixed-phrase {
-                padding: 15px;
-                margin: 20px 0;
-            }
-            
-            input {
-                padding: 14px;
-            }
-            
-            .signature-display {
-                padding: 15px;
-                max-height: 120px;
-            }
-            
-            .notification {
-                left: 15px;
-                right: 15px;
-                top: 15px;
-                max-width: none;
-            }
-        }
-        
-        @media (max-width: 350px) {
-            .container {
-                padding: 20px 15px;
-            }
-            
-            h1 {
-                font-size: 1.6rem;
-            }
-            
-            h2 {
-                font-size: 1.3rem;
-            }
-            
-            .timer {
-                font-size: 1.3rem;
-            }
-            
-            .result {
-                padding: 18px;
-                font-size: 1.1rem;
-            }
-        }
-        
-        /* Prevent zoom on input focus for mobile */
-        @media screen and (max-width: 768px) {
-            input, select, textarea {
-                font-size: 16px;
-            }
-        }
-        
-        .typing-visualization {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-        
-        .key {
-            width: 40px;
-            height: 40px;
-            background: rgba(77, 171, 247, 0.1);
-            border: 1px solid rgba(77, 171, 247, 0.3);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            transition: all 0.2s ease;
-        }
-        
-        .key.active {
-            background: rgba(77, 171, 247, 0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
         .feature-card {
             background: rgba(30, 30, 46, 0.5);
             border-radius: 10px;
@@ -697,6 +594,125 @@
         .instructions li {
             margin-bottom: 8px;
         }
+        
+        .copyright-watermark {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 10px;
+            color: rgba(77, 171, 247, 0.2);
+            z-index: 10000;
+            pointer-events: none;
+        }
+        
+        /* Mobile-specific optimizations */
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                padding: 25px 20px;
+                border-radius: 14px;
+                max-height: 85vh;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            button {
+                width: 100%;
+                max-width: 100%;
+                padding: 16px;
+                min-width: auto;
+            }
+            
+            .fixed-phrase {
+                padding: 15px;
+                margin: 20px 0;
+            }
+            
+            input {
+                padding: 14px;
+            }
+            
+            .signature-display {
+                padding: 15px;
+                max-height: 120px;
+            }
+            
+            .notification {
+                left: 15px;
+                right: 15px;
+                top: 15px;
+                max-width: none;
+            }
+            
+            .typing-visualization .key {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 350px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            .timer {
+                font-size: 1.3rem;
+            }
+            
+            .result {
+                padding: 18px;
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* Prevent zoom on input focus for mobile */
+        @media screen and (max-width: 768px) {
+            input, select, textarea {
+                font-size: 16px;
+            }
+        }
+        
+        .typing-visualization {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .key {
+            width: 40px;
+            height: 40px;
+            background: rgba(77, 171, 247, 0.1);
+            border: 1px solid rgba(77, 171, 247, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+        
+        .key.active {
+            background: rgba(77, 171, 247, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -706,38 +722,41 @@
     <!-- Notification system -->
     <div class="notification" id="notification"></div>
     
+    <!-- Copyright watermark -->
+    <div class="copyright-watermark" id="copyrightWatermark">SelfChain™ v2.0 - © 2023 - Proprietary Technology</div>
+    
     <div class="container">
         <!-- Intro Screen -->
         <div id="introScreen" class="screen active">
             <div class="logo">
-                <span>SelfChain</span>
+                <span>SelfChain v2.0</span>
             </div>
             <h1>Become Your Digital Signature</h1>
             <p>Create a unique identity signature based solely on your typing patterns. Your typing rhythm becomes your personal key to digital identity verification.</p>
             
             <div class="feature-card">
-                <h3>How It Works</h3>
+                <h3>How It Works v2</h3>
                 <p>SelfChain analyzes the unique rhythm of your typing to create a digital signature that identifies you. Unlike passwords, your typing pattern is nearly impossible to replicate.</p>
             </div>
             
             <div class="feature-card">
-                <h3>Key Benefits</h3>
+                <h3>Key Benefits v2</h3>
                 <ul>
                     <li>No passwords to remember</li>
-                    <li>Biometric-level security</li>
+                    <li>Biometric-level security v2</li>
                     <li>Impossible to steal or replicate</li>
                     <li>Completely private - data stays on your device</li>
                 </ul>
             </div>
             
             <div class="button-group">
-                <button id="createIdentityBtn">Create My Identity</button>
+                <button id="createIdentityBtn">Create My Identity v2</button>
             </div>
         </div>
         
         <!-- Enrollment Screen -->
         <div id="enrollScreen" class="screen">
-            <h2>Create Your Identity</h2>
+            <h2>Create Your Identity v2</h2>
             <p>Type the phrase below naturally for 10 seconds. Your unique typing rhythm will be captured.</p>
             
             <div class="fixed-phrase">This is me</div>
@@ -760,7 +779,7 @@
             </div>
             
             <div class="instructions">
-                <p><strong>Important:</strong></p>
+                <p><strong>Important v2:</strong></p>
                 <ul>
                     <li>Type naturally at your normal speed</li>
                     <li>Don't try to type perfectly - your rhythm matters</li>
@@ -774,13 +793,13 @@
             </div>
             
             <div class="button-group">
-                <button id="cancelEnrollBtn">Cancel</button>
+                <button id="cancelEnrollBtn">Cancel v2</button>
             </div>
         </div>
         
         <!-- Verification Screen -->
         <div id="verifyScreen" class="screen">
-            <h2>Verify Your Identity</h2>
+            <h2>Verify Your Identity v2</h2>
             <p>Type the phrase below naturally. Your typing rhythm will be compared to your stored signature.</p>
             
             <div class="fixed-phrase">This is me</div>
@@ -812,51 +831,56 @@
             <div id="verificationResult" class="result"></div>
             
             <div class="button-group">
-                <button id="verifyBtn">Verify Identity</button>
-                <button id="resetBtn">Reset Identity</button>
+                <button id="verifyBtn">Verify Identity v2</button>
+                <button id="resetBtn">Reset Identity v2</button>
             </div>
         </div>
         
         <!-- Identity Created Screen -->
         <div id="identityCreatedScreen" class="screen">
-            <h2>Identity Created!</h2>
+            <h2>Identity Created! v2</h2>
             <p>Your unique typing signature has been generated and stored locally.</p>
             
             <div class="signature-display" id="signatureDisplay"></div>
             
             <div class="security-level">
-                <span>Security Level:</span>
+                <span>Security Level v2:</span>
                 <div class="level-bar">
                     <div class="level-fill" id="securityLevel"></div>
                 </div>
-                <div class="level-text" id="securityText">Calculating...</div>
+                <div class="level-text" id="securityText">Calculating v2...</div>
             </div>
             
             <div class="typing-stats">
                 <div class="stat-card">
                     <div class="stat-value" id="avgSpeed">0ms</div>
-                    <div class="stat-label">Avg. Speed</div>
+                    <div class="stat-label">Avg. Speed v2</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="variance">0ms</div>
-                    <div class="stat-label">Variance</div>
+                    <div class="stat-label">Variance v2</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="accuracy">0%</div>
-                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-label">Accuracy v2</div>
                 </div>
             </div>
             
             <p>You can now verify your identity using your unique typing patterns.</p>
             
             <div class="button-group">
-                <button id="goToVerifyBtn" class="pulse">Verify Identity</button>
-                <button id="resetAfterCreateBtn">Reset Identity</button>
+                <button id="goToVerifyBtn" class="pulse">Verify Identity v2</button>
+                <button id="resetAfterCreateBtn">Reset Identity v2</button>
             </div>
         </div>
     </div>
 
     <script>
+        // Copyright protection system v2
+        const copyrightWatermark = document.getElementById('copyrightWatermark');
+        const now = new Date();
+        copyrightWatermark.textContent = `SelfChain™ v2.0 - © ${now.getFullYear()} - Proprietary Technology`;
+        
         // DOM Elements
         const introScreen = document.getElementById('introScreen');
         const enrollScreen = document.getElementById('enrollScreen');
@@ -1057,7 +1081,8 @@
                 accuracy: accuracy,
                 avgInterval: avgInterval,
                 variance: variance,
-                patternLength: typingPattern.length
+                patternLength: typingPattern.length,
+                version: 2 // Added version 2 marker
             };
             
             // Create a unique hash from the data
@@ -1165,9 +1190,9 @@
                 );
                 
                 securityLevel.style.width = `${securityScore}%`;
-                securityText.textContent = securityScore >= 80 ? 'Strong' : 
-                                          securityScore >= 60 ? 'Good' : 
-                                          securityScore >= 40 ? 'Fair' : 'Weak';
+                securityText.textContent = securityScore >= 80 ? 'Strong v2' : 
+                                          securityScore >= 60 ? 'Good v2' : 
+                                          securityScore >= 40 ? 'Fair v2' : 'Weak v2';
                 
                 // Show identity created screen
                 showScreen(identityCreatedScreen);
@@ -1187,7 +1212,7 @@
                 if (lockoutUntil > now) {
                     const minutes = Math.ceil((lockoutUntil - now) / 60000);
                     showNotification(`Too many attempts. Try again in ${minutes} minute(s).`, 'error');
-                    verificationResult.textContent = '⏳ Account Locked';
+                    verificationResult.textContent = '⏳ Account Locked v2';
                     verificationResult.classList.add('error', 'show');
                     return;
                 }
@@ -1218,12 +1243,12 @@
                 
                 if (similarity >= 85) {
                     verificationResult.classList.add('success');
-                    verificationResult.textContent = `✔ Access Granted (${similarity.toFixed(1)}% match)`;
+                    verificationResult.textContent = `✔ Access Granted v2 (${similarity.toFixed(1)}% match)`;
                     showNotification('Verification successful! Access granted.', 'success');
                     verificationAttempts = 0; // Reset attempts on success
                 } else {
                     verificationResult.classList.add('error');
-                    verificationResult.textContent = `✖ Access Denied (${similarity.toFixed(1)}% match)`;
+                    verificationResult.textContent = `✖ Access Denied v2 (${similarity.toFixed(1)}% match)`;
                     showNotification('Verification failed. Access denied.', 'error');
                     
                     // Increment attempt counter
@@ -1249,7 +1274,7 @@
         
         // Reset identity
         function resetIdentity() {
-            if (confirm('Are you sure you want to reset your identity? This action cannot be undone.')) {
+            if (confirm('Are you sure you want to reset your identity? This action cannot be undone. v2')) {
                 localStorage.removeItem('selfchain_signature');
                 storedSignature = null;
                 verificationAttempts = 0;
@@ -1257,7 +1282,7 @@
                 resetEnrollment();
                 resetVerification();
                 showScreen(introScreen);
-                showNotification('Identity reset successfully.', 'success');
+                showNotification('Identity reset successfully. v2', 'success');
             }
         }
         
@@ -1297,7 +1322,7 @@
         
         verifyBtn.addEventListener('click', () => {
             if (verifyPhraseInput.value.length === 0) {
-                showNotification('Please type the phrase to verify', 'error');
+                showNotification('Please type the phrase to verify v2', 'error');
             } else {
                 completeVerification();
             }
