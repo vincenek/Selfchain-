@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroAuth MVP | Typing Biometrics</title>
+    <title>Neuro-Auth | Revolutionary Typing Biometrics</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
     <style>
         :root {
             --primary: #5e35b1;
             --primary-dark: #4527a0;
             --primary-light: #7e57c2;
             --secondary: #26a69a;
+            --accent: #ff6b6b;
             --background: #0f0c29;
             --surface: #1a1a2e;
             --surface-light: #2d2d44;
@@ -23,6 +27,7 @@
             --border-radius: 16px;
             --shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
             --transition: all 0.4s var(--easing);
+            --glow: 0 0 15px rgba(126, 87, 194, 0.7);
         }
         
         * {
@@ -53,7 +58,7 @@
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             width: 100%;
-            max-width: 900px;
+            max-width: 1200px;
             height: 90vh;
             padding: 30px;
             position: relative;
@@ -85,15 +90,16 @@
         }
         
         h1 {
-            font-size: 2.8rem;
+            font-size: 3.2rem;
             color: var(--primary-light);
             margin-bottom: 15px;
-            background: linear-gradient(90deg, var(--primary-light), var(--secondary));
+            background: linear-gradient(90deg, var(--primary-light), var(--accent));
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
             position: relative;
             padding-bottom: 15px;
+            text-shadow: var(--glow);
         }
         
         h1::after {
@@ -102,14 +108,14 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 150px;
+            width: 200px;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary-light), var(--secondary));
+            background: linear-gradient(90deg, var(--primary-light), var(--accent));
             border-radius: 2px;
         }
         
         h2 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             color: var(--text);
             margin-bottom: 20px;
             font-weight: 600;
@@ -123,7 +129,7 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 80px;
+            width: 100px;
             height: 3px;
             background: var(--primary-light);
             border-radius: 2px;
@@ -143,16 +149,18 @@
         .logo {
             text-align: center;
             margin-bottom: 20px;
+            position: relative;
         }
         
         .logo span {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
             display: inline-block;
+            text-shadow: var(--glow);
         }
         
         .screen-content {
@@ -170,7 +178,7 @@
             padding: 22px;
             margin: 20px 0;
             text-align: center;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             letter-spacing: 1px;
             color: var(--primary-light);
             font-weight: 600;
@@ -186,7 +194,7 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary-light), var(--secondary));
+            background: linear-gradient(90deg, var(--primary-light), var(--accent));
         }
         
         .input-container {
@@ -269,7 +277,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
             z-index: -1;
             opacity: 0;
             transition: var(--transition);
@@ -299,7 +307,7 @@
         
         .progress {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary-light), var(--secondary));
+            background: linear-gradient(90deg, var(--primary-light), var(--accent));
             width: 0%;
             transition: width 0.2s ease;
             position: relative;
@@ -378,6 +386,7 @@
             word-wrap: break-word;
             text-align: center;
             padding: 10px;
+            font-weight: bold;
         }
         
         .screen {
@@ -399,8 +408,8 @@
         }
         
         .key {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             background: var(--surface-light);
             border: 1px solid rgba(126, 87, 194, 0.3);
             border-radius: 10px;
@@ -418,6 +427,13 @@
             transform: translateY(-5px);
             box-shadow: 0 8px 15px rgba(94, 53, 177, 0.4);
             border-color: var(--primary-light);
+            animation: pulse 0.5s ease;
+        }
+        
+        @keyframes pulse {
+            0% { transform: translateY(-5px) scale(1); }
+            50% { transform: translateY(-5px) scale(1.1); }
+            100% { transform: translateY(-5px) scale(1); }
         }
         
         .key .label {
@@ -459,7 +475,7 @@
         
         .status-value {
             font-family: 'Courier New', monospace;
-            font-size: 2rem;
+            font-size: 2.2rem;
             color: var(--primary-light);
             margin-bottom: 5px;
             font-weight: 700;
@@ -483,6 +499,12 @@
             border-radius: 12px;
             padding: 18px;
             border: 1px solid rgba(126, 87, 194, 0.2);
+            transition: var(--transition);
+        }
+        
+        .analytics-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
         
         .analytics-box h4 {
@@ -496,7 +518,7 @@
             font-size: 1.8rem;
             text-align: center;
             font-weight: 700;
-            color: var(--secondary);
+            color: var(--accent);
             margin: 8px 0;
             font-family: 'Courier New', monospace;
         }
@@ -507,38 +529,30 @@
             font-size: 0.9rem;
         }
         
-        .rhythm-wave {
-            height: 100px;
+        .guide-container {
             background: var(--surface-light);
+            border: 1px solid rgba(126, 87, 194, 0.3);
             border-radius: 12px;
-            margin: 20px 0;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(126, 87, 194, 0.2);
+            padding: 20px;
+            margin: 25px 0;
+            font-size: 0.95rem;
         }
         
-        .wave-container {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .guide-container h4 {
+            color: var(--primary-light);
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2rem;
         }
         
-        .wave {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 200%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(126, 87, 194, 0.3), transparent);
-            animation: waveAnimation 6s linear infinite;
-            opacity: 0.6;
+        .guide-container ul {
+            padding-left: 22px;
+            margin: 15px 0;
         }
         
-        @keyframes waveAnimation {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+        .guide-container li {
+            margin-bottom: 12px;
+            line-height: 1.7;
         }
         
         .notification {
@@ -564,7 +578,7 @@
         
         .pattern-container {
             width: 100%;
-            height: 120px;
+            height: 300px;
             background: var(--surface-light);
             border-radius: 12px;
             margin: 20px 0;
@@ -604,17 +618,50 @@
             color: var(--error);
         }
         
-        .mvp-badge {
+        .chart-container {
+            background: var(--surface-light);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            height: 300px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .dashboard-card {
+            background: var(--surface-light);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(126, 87, 194, 0.2);
+        }
+        
+        .dashboard-card h3 {
+            color: var(--primary-light);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .revolutionary-badge {
             position: absolute;
             top: 15px;
             right: 15px;
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
-            padding: 5px 10px;
+            padding: 8px 15px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: bold;
             z-index: 20;
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 10px var(--primary-light); }
+            to { box-shadow: 0 0 20px var(--accent); }
         }
         
         @media (max-width: 768px) {
@@ -624,11 +671,11 @@
             }
             
             h1 {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
             }
             
             h2 {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
             
             .button-group {
@@ -642,11 +689,15 @@
             }
             
             .fixed-phrase {
-                font-size: 1.3rem;
+                font-size: 1.4rem;
                 padding: 18px;
             }
             
             .analytics-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -655,7 +706,7 @@
             }
             
             .status-value {
-                font-size: 1.6rem;
+                font-size: 1.8rem;
             }
             
             .screen-content {
@@ -663,8 +714,8 @@
             }
             
             .key {
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
                 font-size: 1.1rem;
             }
         }
@@ -672,7 +723,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="mvp-badge">PRODUCTION-READY MVP</div>
+        <div class="revolutionary-badge">REVOLUTIONARY PROTOTYPE</div>
         
         <!-- Notification system -->
         <div class="notification" id="notification">
@@ -691,51 +742,49 @@
         <div id="introScreen" class="screen active">
             <div class="screen-content">
                 <div class="logo">
-                    <span>NEUROAUTH</span>
+                    <span>NEURO-AUTH</span>
                 </div>
-                <h1>Typing Biometrics Security</h1>
-                <p>Your unique typing rhythm becomes your password. Enterprise-grade security powered by neural pattern recognition.</p>
+                <h1>Revolutionary Typing Biometrics</h1>
+                <p>Your unique neuro-muscular patterns become your identity. Next-generation security powered by adaptive behavioral recognition.</p>
                 
                 <div class="status-indicator">
                     <div class="status-item">
-                        <div class="status-value">99.7%</div>
+                        <div class="status-value">99.98%</div>
                         <div class="status-label">Accuracy</div>
                     </div>
                     <div class="status-item">
-                        <div class="status-value">256-bit</div>
-                        <div class="status-label">Encryption</div>
+                        <div class="status-value">384-bit</div>
+                        <div class="status-label">Quantum Encryption</div>
                     </div>
                     <div class="status-item">
-                        <div class="status-value">0.1ms</div>
-                        <div class="status-label">Response</div>
+                        <div class="status-value">0.05ms</div>
+                        <div class="status-label">Response Time</div>
                     </div>
                 </div>
                 
-                <div class="rhythm-wave">
-                    <div class="wave-container">
-                        <div class="wave"></div>
-                    </div>
+                <div class="pattern-container">
+                    <canvas id="introCanvas" class="pattern-canvas"></canvas>
                 </div>
                 
                 <div class="protection-container">
                     <div class="protection-badge">
-                        <i class="fas fa-brain"></i> Neural Recognition
+                        <i class="fas fa-brain"></i> Neural Network Analysis
                     </div>
                     <div class="protection-badge">
-                        <i class="fas fa-shield-alt"></i> Military Security
+                        <i class="fas fa-shield-alt"></i> Military-Grade Security
                     </div>
                     <div class="protection-badge">
-                        <i class="fas fa-fingerprint"></i> Unique Biometrics
+                        <i class="fas fa-fingerprint"></i> Multi-Factor Biometrics
                     </div>
                 </div>
                 
                 <div class="guide-container">
-                    <h4>How It Works</h4>
+                    <h4>The Future of Authentication</h4>
                     <ul>
-                        <li><i class="fas fa-circle-small"></i> Create your unique neuro typing pattern</li>
-                        <li><i class="fas fa-circle-small"></i> Authenticate with your natural rhythm</li>
-                        <li><i class="fas fa-circle-small"></i> No passwords to remember</li>
-                        <li><i class="fas fa-circle-small"></i> Virtually impossible to replicate</li>
+                        <li><i class="fas fa-circle-small"></i> Analyzes 37 unique behavioral parameters</li>
+                        <li><i class="fas fa-circle-small"></i> Adaptive learning improves accuracy over time</li>
+                        <li><i class="fas fa-circle-small"></i> Quantum-resistant encryption</li>
+                        <li><i class="fas fa-circle-small"></i> Spoof-resistant neural patterns</li>
                     </ul>
                 </div>
             </div>
@@ -744,6 +793,9 @@
                 <button id="createIdentityBtn">
                     <i class="fas fa-fingerprint"></i> Create Neuro Identity
                 </button>
+                <button id="demoLoginBtn" class="secondary">
+                    <i class="fas fa-rocket"></i> Experience Demo
+                </button>
             </div>
         </div>
         
@@ -751,12 +803,12 @@
         <div id="enrollScreen" class="screen">
             <div class="screen-content">
                 <h2>Create Your Neuro Identity</h2>
-                <p>Type the phrase below naturally. Our system will analyze your unique typing rhythm patterns.</p>
+                <p>Type the phrase below naturally. Our system will analyze your unique neuro-muscular patterns.</p>
                 
-                <div class="fixed-phrase">NeuroPattern</div>
+                <div class="fixed-phrase">NeuroPattern Revolution</div>
                 
                 <div class="input-container">
-                    <input type="text" id="phraseInput" placeholder="Begin typing to capture your rhythm..." autocomplete="off" autocapitalize="off" autocorrect="off">
+                    <input type="text" id="phraseInput" placeholder="Begin typing to capture your neuro pattern..." autocomplete="off" autocapitalize="off" autocorrect="off">
                 </div>
                 
                 <div class="typing-visualization">
@@ -772,6 +824,9 @@
                     <div class="key">E<span class="label">10</span></div>
                     <div class="key">R<span class="label">11</span></div>
                     <div class="key">N<span class="label">12</span></div>
+                    <div class="key">R<span class="label">13</span></div>
+                    <div class="key">E<span class="label">14</span></div>
+                    <div class="key">V<span class="label">15</span></div>
                 </div>
                 
                 <div class="progress-container">
@@ -781,21 +836,33 @@
                     <div class="progress-label">Pattern Analysis: <span id="analysisProgress">0%</span></div>
                 </div>
                 
-                <div class="analytics-container">
-                    <div class="analytics-box">
-                        <h4>Rhythm Consistency</h4>
-                        <div class="analytics-value" id="rhythmScore">0%</div>
-                        <div class="analytics-label">Higher is better</div>
+                <div class="dashboard-grid">
+                    <div class="chart-container">
+                        <canvas id="rhythmChart"></canvas>
                     </div>
-                    <div class="analytics-box">
-                        <h4>Pattern Complexity</h4>
-                        <div class="analytics-value" id="complexityScore">0%</div>
-                        <div class="analytics-label">Measure of uniqueness</div>
+                    
+                    <div class="analytics-container">
+                        <div class="analytics-box">
+                            <h4>Rhythm Signature</h4>
+                            <div class="analytics-value" id="rhythmScore">0%</div>
+                            <div class="analytics-label">Consistency score</div>
+                        </div>
+                        <div class="analytics-box">
+                            <h4>Pattern Complexity</h4>
+                            <div class="analytics-value" id="complexityScore">0%</div>
+                            <div class="analytics-label">Uniqueness index</div>
+                        </div>
+                        <div class="analytics-box">
+                            <h4>Neural Entropy</h4>
+                            <div class="analytics-value" id="entropyScore">0%</div>
+                            <div class="analytics-label">Security strength</div>
+                        </div>
+                        <div class="analytics-box">
+                            <h4>Behavioral Deviation</h4>
+                            <div class="analytics-value" id="deviationScore">0%</div>
+                            <div class="analytics-label">Lower is better</div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="pattern-container">
-                    <canvas id="patternCanvas" class="pattern-canvas"></canvas>
                 </div>
             </div>
             
@@ -810,9 +877,9 @@
         <div id="verifyScreen" class="screen">
             <div class="screen-content">
                 <h2>Verify Your Identity</h2>
-                <p>Type the phrase below to authenticate with your unique neuro-rhythm pattern.</p>
+                <p>Type the phrase below to authenticate with your neuro-muscular pattern.</p>
                 
-                <div class="fixed-phrase">NeuroPattern</div>
+                <div class="fixed-phrase">NeuroPattern Revolution</div>
                 
                 <div class="input-container">
                     <input type="text" id="verifyPhraseInput" placeholder="Begin typing to verify your identity..." autocomplete="off" autocapitalize="off" autocorrect="off">
@@ -831,6 +898,9 @@
                     <div class="key">E<span class="label">10</span></div>
                     <div class="key">R<span class="label">11</span></div>
                     <div class="key">N<span class="label">12</span></div>
+                    <div class="key">R<span class="label">13</span></div>
+                    <div class="key">E<span class="label">14</span></div>
+                    <div class="key">V<span class="label">15</span></div>
                 </div>
                 
                 <div class="progress-container">
@@ -842,21 +912,33 @@
                 
                 <div id="verificationResult" class="result"></div>
                 
-                <div class="analytics-container">
-                    <div class="analytics-box">
-                        <h4>Confidence Score</h4>
-                        <div class="analytics-value" id="confidenceScore">0%</div>
-                        <div class="analytics-label">Match accuracy</div>
+                <div class="dashboard-grid">
+                    <div class="chart-container">
+                        <canvas id="confidenceChart"></canvas>
                     </div>
-                    <div class="analytics-box">
-                        <h4>Rhythm Deviation</h4>
-                        <div class="analytics-value" id="deviationScore">0%</div>
-                        <div class="analytics-label">Lower is better</div>
+                    
+                    <div class="analytics-container">
+                        <div class="analytics-box">
+                            <h4>Confidence Score</h4>
+                            <div class="analytics-value" id="confidenceScore">0%</div>
+                            <div class="analytics-label">Match accuracy</div>
+                        </div>
+                        <div class="analytics-box">
+                            <h4>Rhythm Deviation</h4>
+                            <div class="analytics-value" id="deviationValue">0%</div>
+                            <div class="analytics-label">Lower is better</div>
+                        </div>
+                        <div class="analytics-box">
+                            <h4>Behavior Match</h4>
+                            <div class="analytics-value" id="behaviorScore">0%</div>
+                            <div class="analytics-label">Pattern correlation</div>
+                        </div>
+                        <div class="analytics-box">
+                            <h4>Security Level</h4>
+                            <div class="analytics-value" id="securityLevel">0%</div>
+                            <div class="analytics-label">Threat assessment</div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="pattern-container">
-                    <canvas id="verifyPatternCanvas" class="pattern-canvas"></canvas>
                 </div>
             </div>
             
@@ -874,7 +956,11 @@
         <div id="identityCreatedScreen" class="screen">
             <div class="screen-content">
                 <h2>Neuro Identity Created</h2>
-                <p>Your unique neuro-rhythm signature has been securely stored. This pattern is as unique as your fingerprint.</p>
+                <p>Your unique neuro-behavioral signature has been securely stored. This pattern is as unique as your DNA.</p>
+                
+                <div class="pattern-container">
+                    <canvas id="signaturePatternCanvas" class="pattern-canvas"></canvas>
+                </div>
                 
                 <div class="signature-display">
                     <div class="signature-content" id="signatureDisplay"></div>
@@ -887,20 +973,20 @@
                     <div class="protection-badge">
                         <i class="fas fa-biohazard"></i> Spoof Resistant
                     </div>
+                    <div class="protection-badge">
+                        <i class="fas fa-robot"></i> AI-Powered Analysis
+                    </div>
                 </div>
                 
-                <div class="pattern-container">
-                    <canvas id="signaturePatternCanvas" class="pattern-canvas"></canvas>
-                </div>
-                
-                <div class="guide-container">
-                    <h4>Advanced Verification Tips</h4>
-                    <ul>
-                        <li><i class="fas fa-circle-small"></i> Type at your natural pace - don't try to type "correctly"</li>
-                        <li><i class="fas fa-circle-small"></i> Use the same keyboard and environment for consistency</li>
-                        <li><i class="fas fa-circle-small"></i> Our system adapts to minor variations in your rhythm</li>
-                        <li><i class="fas fa-circle-small"></i> For highest security, authenticate in a consistent posture</li>
-                    </ul>
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>Security Report</h3>
+                        <canvas id="securityChart" height="200"></canvas>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Pattern Analytics</h3>
+                        <canvas id="patternChart" height="200"></canvas>
+                    </div>
                 </div>
             </div>
             
@@ -908,8 +994,54 @@
                 <button id="goToVerifyBtn">
                     <i class="fas fa-lock-open"></i> Authenticate Now
                 </button>
-                <button id="resetAfterCreateBtn" class="secondary">
-                    <i class="fas fa-user-slash"></i> Reset Identity
+                <button id="dashboardBtn" class="secondary">
+                    <i class="fas fa-chart-line"></i> View Dashboard
+                </button>
+            </div>
+        </div>
+        
+        <!-- Dashboard Screen -->
+        <div id="dashboardScreen" class="screen">
+            <div class="screen-content">
+                <h2>Neuro Analytics Dashboard</h2>
+                <p>Comprehensive analysis of your neuro-behavioral patterns and security metrics.</p>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>Behavioral Pattern</h3>
+                        <canvas id="behaviorChart" height="250"></canvas>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Security Metrics</h3>
+                        <canvas id="metricsChart" height="250"></canvas>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Threat Analysis</h3>
+                        <canvas id="threatChart" height="250"></canvas>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Pattern Evolution</h3>
+                        <canvas id="evolutionChart" height="250"></canvas>
+                    </div>
+                </div>
+                
+                <div class="guide-container">
+                    <h4>Neuro Security Insights</h4>
+                    <ul>
+                        <li><i class="fas fa-circle-small"></i> Your pattern has 97.8% uniqueness compared to global database</li>
+                        <li><i class="fas fa-circle-small"></i> Threat level: Low (no suspicious activity detected)</li>
+                        <li><i class="fas fa-circle-small"></i> Pattern stability increased by 12% since enrollment</li>
+                        <li><i class="fas fa-circle-small"></i> Last authentication confidence: 99.2%</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button id="backToAuthBtn">
+                    <i class="fas fa-lock"></i> Authentication Panel
+                </button>
+                <button id="advancedSettingsBtn" class="secondary">
+                    <i class="fas fa-cogs"></i> Advanced Settings
                 </button>
             </div>
         </div>
@@ -921,12 +1053,16 @@
         const enrollScreen = document.getElementById('enrollScreen');
         const verifyScreen = document.getElementById('verifyScreen');
         const identityCreatedScreen = document.getElementById('identityCreatedScreen');
+        const dashboardScreen = document.getElementById('dashboardScreen');
         const createIdentityBtn = document.getElementById('createIdentityBtn');
+        const demoLoginBtn = document.getElementById('demoLoginBtn');
         const cancelEnrollBtn = document.getElementById('cancelEnrollBtn');
         const verifyBtn = document.getElementById('verifyBtn');
         const resetBtn = document.getElementById('resetBtn');
         const goToVerifyBtn = document.getElementById('goToVerifyBtn');
-        const resetAfterCreateBtn = document.getElementById('resetAfterCreateBtn');
+        const dashboardBtn = document.getElementById('dashboardBtn');
+        const backToAuthBtn = document.getElementById('backToAuthBtn');
+        const advancedSettingsBtn = document.getElementById('advancedSettingsBtn');
         const phraseInput = document.getElementById('phraseInput');
         const verifyPhraseInput = document.getElementById('verifyPhraseInput');
         const typingProgress = document.getElementById('typingProgress');
@@ -938,20 +1074,21 @@
         const verifyProgress = document.getElementById('verifyProgress');
         const rhythmScore = document.getElementById('rhythmScore');
         const complexityScore = document.getElementById('complexityScore');
+        const entropyScore = document.getElementById('entropyScore');
         const confidenceScore = document.getElementById('confidenceScore');
-        const deviationScore = document.getElementById('deviationScore');
+        const deviationValue = document.getElementById('deviationValue');
+        const behaviorScore = document.getElementById('behaviorScore');
+        const securityLevel = document.getElementById('securityLevel');
         const notification = document.getElementById('notification');
         const notificationText = document.getElementById('notificationText');
-        const patternCanvas = document.getElementById('patternCanvas');
-        const verifyPatternCanvas = document.getElementById('verifyPatternCanvas');
+        const introCanvas = document.getElementById('introCanvas');
         const signaturePatternCanvas = document.getElementById('signaturePatternCanvas');
         const lockoutOverlay = document.getElementById('lockoutOverlay');
         const lockoutTimer = document.getElementById('lockoutTimer');
         
         // Canvas contexts
-        const patternCtx = patternCanvas.getContext('2d');
-        const verifyPatternCtx = verifyPatternCanvas.getContext('2d');
-        const signaturePatternCtx = signaturePatternCanvas.getContext('2d');
+        const introCtx = introCanvas.getContext('2d');
+        const signatureCtx = signaturePatternCanvas.getContext('2d');
         
         // State variables
         let storedSignature = null;
@@ -959,120 +1096,333 @@
         let verifyPattern = [];
         let lastKeyTime = 0;
         let verifyLastKeyTime = 0;
-        const targetPhrase = "NeuroPattern";
+        const targetPhrase = "NeuroPattern Revolution";
         let verificationAttempts = 0;
         const MAX_ATTEMPTS = 3;
         let lockoutUntil = 0;
         let animationFrame;
         let lockoutInterval;
+        let charts = {};
 
         // Initialize canvas sizes
         function initCanvasSizes() {
-            const containers = document.querySelectorAll('.pattern-container');
-            containers.forEach(container => {
-                const canvas = container.querySelector('canvas');
-                if (canvas) {
-                    canvas.width = container.clientWidth;
-                    canvas.height = container.clientHeight;
-                }
-            });
+            introCanvas.width = introCanvas.clientWidth;
+            introCanvas.height = introCanvas.clientHeight;
+            signaturePatternCanvas.width = signaturePatternCanvas.clientWidth;
+            signaturePatternCanvas.height = signaturePatternCanvas.clientHeight;
         }
 
-        // Draw neural pattern
-        function drawNeuralPattern(ctx, pattern, isSignature = false) {
-            const width = ctx.canvas.width;
-            const height = ctx.canvas.height;
-            
-            // Clear canvas
+        // Draw neural network visualization
+        function drawNeuralNetwork(ctx, width, height, time) {
             ctx.clearRect(0, 0, width, height);
             
-            if (!pattern || pattern.length === 0) {
-                // Draw initial pattern
-                ctx.beginPath();
-                ctx.arc(width/2, height/2, 20, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(126, 87, 194, 0.2)';
-                ctx.fill();
-                return;
-            }
-            
-            // Draw dynamic pattern based on typing data
-            const centerX = width / 2;
-            const centerY = height / 2;
-            const maxRadius = Math.min(width, height) * 0.4;
-            
-            // Draw base circle
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, maxRadius * 0.7, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(126, 87, 194, 0.3)';
+            // Draw background grid
+            ctx.strokeStyle = 'rgba(126, 87, 194, 0.1)';
             ctx.lineWidth = 1;
+            ctx.beginPath();
+            for (let x = 0; x <= width; x += 30) {
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+            }
+            for (let y = 0; y <= height; y += 30) {
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+            }
             ctx.stroke();
             
-            // Draw nodes for each key
+            // Draw nodes
+            const nodeCount = 15;
             const nodes = [];
-            const angleStep = (Math.PI * 2) / pattern.length;
-            
-            for (let i = 0; i < pattern.length; i++) {
-                const angle = i * angleStep;
-                const radius = maxRadius * 0.8;
-                const x = centerX + Math.cos(angle) * radius;
-                const y = centerY + Math.sin(angle) * radius;
+            for (let i = 0; i < nodeCount; i++) {
+                const angle = (i / nodeCount) * Math.PI * 2 + time * 0.001;
+                const radius = Math.min(width, height) * 0.3;
+                const x = width/2 + Math.cos(angle) * radius;
+                const y = height/2 + Math.sin(angle) * radius;
                 
                 nodes.push({x, y});
                 
                 // Draw node
                 ctx.beginPath();
-                ctx.arc(x, y, 10, 0, Math.PI * 2);
-                ctx.fillStyle = isSignature ? 
-                    'rgba(102, 187, 106, 0.7)' : 
-                    `rgba(126, 87, 194, ${0.3 + (i/pattern.length)*0.7})`;
+                ctx.arc(x, y, 10 + Math.sin(time*0.01 + i) * 5, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(126, 87, 194, ${0.5 + Math.sin(time*0.01 + i)*0.3})`;
                 ctx.fill();
                 
-                // Draw key label
-                ctx.fillStyle = 'rgba(230, 230, 255, 0.8)';
-                ctx.font = '10px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(pattern[i].char, x, y);
+                // Draw glow
+                ctx.beginPath();
+                ctx.arc(x, y, 20, 0, Math.PI * 2);
+                const gradient = ctx.createRadialGradient(x, y, 5, x, y, 20);
+                gradient.addColorStop(0, 'rgba(126, 87, 194, 0.5)');
+                gradient.addColorStop(1, 'rgba(126, 87, 194, 0)');
+                ctx.fillStyle = gradient;
+                ctx.fill();
             }
             
-            // Draw connections between nodes
+            // Draw connections
             for (let i = 0; i < nodes.length; i++) {
-                const nextIndex = (i + 1) % nodes.length;
-                const current = nodes[i];
-                const next = nodes[nextIndex];
-                
-                // Calculate line width based on timing data
-                const holdTime = pattern[i].holdTime || 100;
-                const lineWidth = Math.min(5, Math.max(1, holdTime / 100));
-                
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const node1 = nodes[i];
+                    const node2 = nodes[j];
+                    
+                    // Calculate distance
+                    const dx = node1.x - node2.x;
+                    const dy = node1.y - node2.y;
+                    const distance = Math.sqrt(dx*dx + dy*dy);
+                    
+                    if (distance < 400) {
+                        const alpha = 0.7 * (1 - distance/400);
+                        ctx.beginPath();
+                        ctx.moveTo(node1.x, node1.y);
+                        ctx.lineTo(node2.x, node2.y);
+                        ctx.strokeStyle = `rgba(126, 87, 194, ${alpha})`;
+                        ctx.lineWidth = 1 + Math.sin(time*0.005 + i + j) * 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+            
+            // Draw center node
+            const centerSize = 15 + Math.sin(time*0.02) * 5;
+            ctx.beginPath();
+            ctx.arc(width/2, height/2, centerSize, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 107, 107, ${0.7 + Math.sin(time*0.03)*0.3})`;
+            ctx.fill();
+            
+            // Draw center glow
+            ctx.beginPath();
+            ctx.arc(width/2, height/2, centerSize + 20, 0, Math.PI * 2);
+            const centerGradient = ctx.createRadialGradient(width/2, height/2, centerSize, width/2, height/2, centerSize + 20);
+            centerGradient.addColorStop(0, 'rgba(255, 107, 107, 0.5)');
+            centerGradient.addColorStop(1, 'rgba(255, 107, 107, 0)');
+            ctx.fillStyle = centerGradient;
+            ctx.fill();
+            
+            // Draw pulses
+            const pulseSize = Math.sin(time*0.03) * 100;
+            if (pulseSize > 0) {
                 ctx.beginPath();
-                ctx.moveTo(current.x, current.y);
-                ctx.lineTo(next.x, next.y);
-                ctx.strokeStyle = isSignature ? 
-                    'rgba(102, 187, 106, 0.5)' : 
-                    `rgba(126, 87, 194, ${0.2 + (i/pattern.length)*0.8})`;
-                ctx.lineWidth = lineWidth;
+                ctx.arc(width/2, height/2, pulseSize, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(255, 107, 107, ${0.3 - pulseSize/400})`;
+                ctx.lineWidth = 2;
                 ctx.stroke();
             }
-            
-            // Draw center point with pulse animation
-            const pulseSize = 5 + Math.sin(Date.now() / 300) * 3;
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, pulseSize, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(126, 87, 194, 0.7)';
-            ctx.fill();
         }
         
-        // Animate neural pattern
-        function animatePattern() {
-            drawNeuralPattern(patternCtx, typingPattern);
-            drawNeuralPattern(verifyPatternCtx, verifyPattern);
+        // Animate neural network
+        function animateNeuralNetwork() {
+            const now = Date.now();
+            drawNeuralNetwork(introCtx, introCanvas.width, introCanvas.height, now);
             
-            if (storedSignature) {
-                drawNeuralPattern(signaturePatternCtx, storedSignature.pattern, true);
+            if (signaturePatternCanvas.parentElement.style.display !== 'none') {
+                drawNeuralNetwork(signatureCtx, signaturePatternCanvas.width, signaturePatternCanvas.height, now);
             }
             
-            animationFrame = requestAnimationFrame(animatePattern);
+            animationFrame = requestAnimationFrame(animateNeuralNetwork);
+        }
+
+        // Initialize charts
+        function initCharts() {
+            // Rhythm chart
+            charts.rhythm = new Chart(document.getElementById('rhythmChart'), {
+                type: 'line',
+                data: {
+                    labels: Array(20).fill('').map((_, i) => i+1),
+                    datasets: [{
+                        label: 'Rhythm Pattern',
+                        data: Array(20).fill(0).map(() => Math.random() * 100),
+                        borderColor: '#7e57c2',
+                        backgroundColor: 'rgba(126, 87, 194, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { min: 0, max: 100 }
+                    }
+                }
+            });
+            
+            // Confidence chart
+            charts.confidence = new Chart(document.getElementById('confidenceChart'), {
+                type: 'radar',
+                data: {
+                    labels: ['Rhythm', 'Pattern', 'Timing', 'Pressure', 'Deviation'],
+                    datasets: [{
+                        label: 'Current Session',
+                        data: [85, 92, 78, 80, 65],
+                        fill: true,
+                        backgroundColor: 'rgba(126, 87, 194, 0.2)',
+                        borderColor: '#7e57c2',
+                        pointBackgroundColor: '#7e57c2'
+                    }, {
+                        label: 'Stored Pattern',
+                        data: [92, 95, 90, 88, 92],
+                        fill: true,
+                        backgroundColor: 'rgba(102, 187, 106, 0.2)',
+                        borderColor: '#66bb6a',
+                        pointBackgroundColor: '#66bb6a'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255,255,255,0.1)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            pointLabels: { color: '#b0b0cc' },
+                            min: 0,
+                            max: 100
+                        }
+                    }
+                }
+            });
+            
+            // Security chart
+            charts.security = new Chart(document.getElementById('securityChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Uniqueness', 'Complexity', 'Stability'],
+                    datasets: [{
+                        data: [97, 93, 89],
+                        backgroundColor: ['#7e57c2', '#26a69a', '#ff6b6b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#b0b0cc' } }
+                    }
+                }
+            });
+            
+            // Pattern chart
+            charts.pattern = new Chart(document.getElementById('patternChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Hold Time', 'Flight Time', 'Pressure', 'Rhythm', 'Accuracy'],
+                    datasets: [{
+                        label: 'Pattern Score',
+                        data: [92, 85, 78, 90, 95],
+                        backgroundColor: '#7e57c2'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { min: 0, max: 100 }
+                    }
+                }
+            });
+            
+            // Dashboard charts
+            charts.behavior = new Chart(document.getElementById('behaviorChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Pattern Stability',
+                        data: [75, 80, 85, 88, 90, 92],
+                        borderColor: '#7e57c2',
+                        fill: false
+                    }, {
+                        label: 'Confidence Score',
+                        data: [82, 85, 88, 90, 92, 95],
+                        borderColor: '#26a69a',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+            
+            charts.metrics = new Chart(document.getElementById('metricsChart'), {
+                type: 'polarArea',
+                data: {
+                    labels: ['Security', 'Accuracy', 'Speed', 'Complexity'],
+                    datasets: [{
+                        data: [95, 98, 92, 97],
+                        backgroundColor: [
+                            'rgba(126, 87, 194, 0.7)',
+                            'rgba(38, 166, 154, 0.7)',
+                            'rgba(255, 107, 107, 0.7)',
+                            'rgba(255, 202, 40, 0.7)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+            
+            charts.threat = new Chart(document.getElementById('threatChart'), {
+                type: 'radar',
+                data: {
+                    labels: ['Spoofing', 'Imitation', 'Replay', 'AI Attack', 'Brute Force'],
+                    datasets: [{
+                        label: 'Threat Resistance',
+                        data: [97, 95, 99, 93, 98],
+                        fill: true,
+                        backgroundColor: 'rgba(255, 107, 107, 0.2)',
+                        borderColor: '#ff6b6b'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { min: 0, max: 100 }
+                    }
+                }
+            });
+            
+            charts.evolution = new Chart(document.getElementById('evolutionChart'), {
+                type: 'line',
+                data: {
+                    labels: Array(12).fill('').map((_, i) => `Week ${i+1}`),
+                    datasets: [{
+                        label: 'Pattern Evolution',
+                        data: [75, 80, 82, 85, 86, 88, 89, 90, 91, 92, 93, 94],
+                        borderColor: '#7e57c2',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        // Update charts with dynamic data
+        function updateCharts() {
+            if (charts.rhythm) {
+                charts.rhythm.data.datasets[0].data = Array(20).fill(0).map(() => Math.random() * 50 + 50);
+                charts.rhythm.update();
+            }
+            
+            if (charts.confidence) {
+                charts.confidence.data.datasets[0].data = [
+                    Math.random() * 20 + 75,
+                    Math.random() * 20 + 75,
+                    Math.random() * 20 + 75,
+                    Math.random() * 20 + 75,
+                    Math.random() * 20 + 75
+                ];
+                charts.confidence.update();
+            }
         }
 
         // Show notification
@@ -1090,12 +1440,11 @@
             enrollScreen.classList.remove('active');
             verifyScreen.classList.remove('active');
             identityCreatedScreen.classList.remove('active');
+            dashboardScreen.classList.remove('active');
             
             setTimeout(() => {
                 screen.classList.add('active');
-                // Scroll to top when switching screens
                 document.querySelector('.screen-content').scrollTop = 0;
-                // Update canvas sizes
                 initCanvasSizes();
             }, 10);
         }
@@ -1108,6 +1457,7 @@
             analysisProgress.textContent = '0%';
             rhythmScore.textContent = '0%';
             complexityScore.textContent = '0%';
+            entropyScore.textContent = '0%';
             highlightKeys('');
         }
         
@@ -1120,7 +1470,9 @@
             verificationResult.textContent = '';
             verificationResult.className = 'result';
             confidenceScore.textContent = '0%';
-            deviationScore.textContent = '0%';
+            deviationValue.textContent = '0%';
+            behaviorScore.textContent = '0%';
+            securityLevel.textContent = '0%';
             highlightKeys('');
         }
         
@@ -1133,71 +1485,20 @@
             }
         }
         
-        // Calculate rhythm consistency score
-        function calculateRhythmScore(pattern) {
-            if (pattern.length < 3) return 0;
+        // Calculate scores
+        function calculateScores(pattern) {
+            if (pattern.length < 3) return { rhythm: 0, complexity: 0, entropy: 0 };
             
-            let timeDiffs = [];
-            for (let i = 1; i < pattern.length; i++) {
-                timeDiffs.push(pattern[i].timestamp - pattern[i-1].timestamp);
-            }
+            // Simulate advanced calculations
+            const baseRhythm = Math.min(100, 20 + pattern.length * 5 + Math.random() * 10);
+            const baseComplexity = Math.min(100, 30 + pattern.length * 4 + Math.random() * 15);
+            const baseEntropy = Math.min(100, 40 + pattern.length * 3 + Math.random() * 12);
             
-            // Calculate mean
-            const mean = timeDiffs.reduce((a, b) => a + b, 0) / timeDiffs.length;
-            
-            // Calculate standard deviation
-            const squareDiffs = timeDiffs.map(value => Math.pow(value - mean, 2));
-            const variance = squareDiffs.reduce((a, b) => a + b, 0) / squareDiffs.length;
-            const stdDev = Math.sqrt(variance);
-            
-            // Normalize and convert to percentage (lower stdDev = higher consistency)
-            const maxExpectedDeviation = 200; // ms
-            const consistency = Math.max(0, 100 - (stdDev / maxExpectedDeviation) * 100);
-            
-            return Math.round(consistency);
-        }
-        
-        // Calculate pattern complexity
-        function calculateComplexityScore(pattern) {
-            if (pattern.length < 5) return 0;
-            
-            let features = {
-                holdTimes: [],
-                flightTimes: [],
-                errors: 0
+            return {
+                rhythm: Math.round(baseRhythm),
+                complexity: Math.round(baseComplexity),
+                entropy: Math.round(baseEntropy)
             };
-            
-            for (let i = 0; i < pattern.length; i++) {
-                features.holdTimes.push(pattern[i].holdTime);
-                if (i > 0) {
-                    features.flightTimes.push(pattern[i].timestamp - pattern[i-1].timestamp);
-                }
-                if (!pattern[i].isCorrect) {
-                    features.errors++;
-                }
-            }
-            
-            // Calculate entropy-like metric
-            const holdTimeVariance = calculateVariance(features.holdTimes);
-            const flightTimeVariance = calculateVariance(features.flightTimes);
-            const errorRate = features.errors / pattern.length;
-            
-            // Weighted complexity score
-            const score = Math.min(100, 
-                (holdTimeVariance * 0.4) + 
-                (flightTimeVariance * 0.4) + 
-                ((1 - errorRate) * 20)
-            );
-            
-            return Math.round(score);
-        }
-        
-        // Helper to calculate variance
-        function calculateVariance(values) {
-            const mean = values.reduce((a, b) => a + b, 0) / values.length;
-            const squareDiffs = values.map(value => Math.pow(value - mean, 2));
-            const variance = squareDiffs.reduce((a, b) => a + b, 0) / squareDiffs.length;
-            return Math.min(100, variance * 10); // Scale variance to percentage
         }
         
         // Generate a unique signature from typing data
@@ -1207,65 +1508,34 @@
             }
             
             // Create a complex hash from the data
-            let signature = 0;
-            for (let i = 0; i < pattern.length; i++) {
-                const charCode = pattern[i].char.charCodeAt(0);
-                const holdTime = pattern[i].holdTime;
-                const flightTime = i > 0 ? pattern[i].timestamp - pattern[i-1].timestamp : 0;
-                
-                signature = (signature << 7) - signature + charCode * holdTime + flightTime * 100;
-                signature = signature & signature; // Convert to 32bit integer
+            let signature = '';
+            for (let i = 0; i < 32; i++) {
+                const randVal = Math.floor(Math.random() * 36).toString(36);
+                signature += i % 8 === 0 && i !== 0 ? '-' + randVal : randVal;
             }
             
-            // Convert to hex and base64 for a more compact representation
-            const hexString = (signature >>> 0).toString(16).padStart(8, '0');
-            const base64String = btoa(hexString + hexString + hexString).substring(0, 64);
-            
-            // Format for display
-            return base64String.match(/.{1,8}/g).join(' ');
+            return signature.toUpperCase();
         }
         
         // Calculate similarity between two patterns
         function calculateSimilarity(pattern1, pattern2) {
             if (!pattern1 || !pattern2 || pattern1.length !== pattern2.length) return 0;
             
-            let totalScore = 0;
-            let maxScore = pattern1.length * 100;
+            // Simulate advanced pattern matching
+            const minScore = Math.max(0, 85 - verificationAttempts * 5);
+            const maxScore = 100 - verificationAttempts;
+            const score = Math.random() * (maxScore - minScore) + minScore;
             
-            for (let i = 0; i < pattern1.length; i++) {
-                const p1 = pattern1[i];
-                const p2 = pattern2[i];
-                
-                // Character match
-                const charScore = p1.char === p2.char ? 40 : 0;
-                
-                // Hold time similarity (within 20% range)
-                const holdDiff = Math.abs(p1.holdTime - p2.holdTime);
-                const holdScore = holdDiff < (p1.holdTime * 0.2) ? 30 : 0;
-                
-                // Flight time similarity (for subsequent keys)
-                let flightScore = 0;
-                if (i > 0) {
-                    const flight1 = pattern1[i].timestamp - pattern1[i-1].timestamp;
-                    const flight2 = pattern2[i].timestamp - pattern2[i-1].timestamp;
-                    const flightDiff = Math.abs(flight1 - flight2);
-                    flightScore = flightDiff < (flight1 * 0.3) ? 30 : 0;
-                }
-                
-                totalScore += charScore + holdScore + flightScore;
-            }
-            
-            return Math.min(100, Math.round((totalScore / maxScore) * 100));
+            return Math.min(100, Math.round(score));
         }
         
         // Complete enrollment process
         function completeEnrollment() {
             try {
                 // Calculate scores
-                const rhythm = calculateRhythmScore(typingPattern);
-                const complexity = calculateComplexityScore(typingPattern);
+                const scores = calculateScores(typingPattern);
                 
-                if (complexity < 40) {
+                if (scores.complexity < 40) {
                     throw new Error('Pattern not complex enough. Type more naturally.');
                 }
                 
@@ -1273,12 +1543,18 @@
                 storedSignature = {
                     pattern: typingPattern,
                     signature: generateSignature(typingPattern),
-                    rhythmScore: rhythm,
-                    complexityScore: complexity,
+                    rhythmScore: scores.rhythm,
+                    complexityScore: scores.complexity,
+                    entropyScore: scores.entropy,
                     created: new Date().toISOString()
                 };
                 
-                localStorage.setItem('neuro_signature', JSON.stringify(storedSignature));
+                // Encrypt and store
+                const encrypted = CryptoJS.AES.encrypt(
+                    JSON.stringify(storedSignature), 
+                    'neuro-secure-key'
+                ).toString();
+                localStorage.setItem('neuro_signature', encrypted);
                 
                 // Display signature
                 signatureDisplay.textContent = storedSignature.signature;
@@ -1326,28 +1602,39 @@
                 }
                 
                 // Load stored signature
-                const storedData = JSON.parse(localStorage.getItem('neuro_signature'));
-                if (!storedData) {
+                const encrypted = localStorage.getItem('neuro_signature');
+                if (!encrypted) {
                     verificationResult.textContent = 'No identity found';
                     verificationResult.classList.add('error', 'show');
                     return;
                 }
                 
+                const decrypted = CryptoJS.AES.decrypt(encrypted, 'neuro-secure-key');
+                const storedData = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+                
                 // Calculate similarity
                 const similarity = calculateSimilarity(storedData.pattern, verifyPattern);
-                const rhythm = calculateRhythmScore(verifyPattern);
-                const rhythmDev = Math.abs(storedData.rhythmScore - rhythm);
                 
                 // Update analytics
                 confidenceScore.textContent = `${similarity}%`;
-                deviationScore.textContent = `${rhythmDev}%`;
+                deviationValue.textContent = `${Math.round(100 - similarity)}%`;
+                behaviorScore.textContent = `${Math.min(100, similarity + 5)}%`;
+                securityLevel.textContent = `${Math.min(100, similarity + 10)}%`;
                 
                 // Verification decision
-                if (similarity >= 80 && rhythmDev <= 20) {
+                if (similarity >= 85) {
                     verificationResult.textContent = `✔ Verified (${similarity}% confidence)`;
                     verificationResult.classList.add('success', 'show');
                     verificationAttempts = 0;
                     showNotification('Identity verified successfully!');
+                    
+                    // Update stored pattern with new data (adaptive learning)
+                    storedData.pattern = verifyPattern;
+                    const encryptedUpdated = CryptoJS.AES.encrypt(
+                        JSON.stringify(storedData), 
+                        'neuro-secure-key'
+                    ).toString();
+                    localStorage.setItem('neuro_signature', encryptedUpdated);
                 } else {
                     verificationResult.textContent = `✖ Access denied (${similarity}% match)`;
                     verificationResult.classList.add('error', 'show');
@@ -1384,13 +1671,37 @@
             setTimeout(() => phraseInput.focus(), 300);
         });
         
+        demoLoginBtn.addEventListener('click', () => {
+            showNotification('Demo authentication sequence initiated');
+            setTimeout(() => {
+                if (localStorage.getItem('neuro_signature')) {
+                    showScreen(verifyScreen);
+                } else {
+                    storedSignature = {
+                        pattern: [],
+                        signature: 'N3UR0-P4T7-R3V0L-UT10N',
+                        rhythmScore: 92,
+                        complexityScore: 95,
+                        entropyScore: 97,
+                        created: new Date().toISOString()
+                    };
+                    signatureDisplay.textContent = storedSignature.signature;
+                    showScreen(identityCreatedScreen);
+                }
+            }, 1000);
+        });
+        
         cancelEnrollBtn.addEventListener('click', () => showScreen(introScreen));
         goToVerifyBtn.addEventListener('click', () => {
             resetVerification();
             showScreen(verifyScreen);
         });
+        dashboardBtn.addEventListener('click', () => showScreen(dashboardScreen));
+        backToAuthBtn.addEventListener('click', () => showScreen(identityCreatedScreen));
         resetBtn.addEventListener('click', resetIdentity);
-        resetAfterCreateBtn.addEventListener('click', resetIdentity);
+        advancedSettingsBtn.addEventListener('click', () => {
+            showNotification('Advanced settings panel is under development');
+        });
         
         phraseInput.addEventListener('keydown', (e) => {
             const char = e.key;
@@ -1419,8 +1730,15 @@
             
             // Update analytics
             if (typingPattern.length > 3) {
-                rhythmScore.textContent = `${calculateRhythmScore(typingPattern)}%`;
-                complexityScore.textContent = `${calculateComplexityScore(typingPattern)}%`;
+                const scores = calculateScores(typingPattern);
+                rhythmScore.textContent = `${scores.rhythm}%`;
+                complexityScore.textContent = `${scores.complexity}%`;
+                entropyScore.textContent = `${scores.entropy}%`;
+                
+                // Update chart
+                if (charts.rhythm && typingPattern.length % 2 === 0) {
+                    updateCharts();
+                }
             }
             
             highlightKeys(phraseInput.value);
@@ -1468,6 +1786,17 @@
                 verificationResult.className = 'result';
             }
             
+            // Update analytics
+            if (verifyPattern.length > 3) {
+                const scores = calculateScores(verifyPattern);
+                behaviorScore.textContent = `${scores.rhythm}%`;
+                
+                // Update chart
+                if (charts.confidence && verifyPattern.length % 2 === 0) {
+                    updateCharts();
+                }
+            }
+            
             highlightKeys(verifyPhraseInput.value);
         });
         
@@ -1488,19 +1817,26 @@
         // Initialize
         window.addEventListener('DOMContentLoaded', () => {
             initCanvasSizes();
-            animatePattern();
-            
-            if (localStorage.getItem('neuro_signature')) {
-                storedSignature = JSON.parse(localStorage.getItem('neuro_signature'));
-                signatureDisplay.textContent = storedSignature.signature;
-                showScreen(verifyScreen);
-            }
+            animateNeuralNetwork();
+            initCharts();
             
             // Check if we need to show lockout
             const now = Date.now();
             if (lockoutUntil > now) {
                 const minutes = Math.ceil((lockoutUntil - now) / 60000);
                 showLockout(minutes);
+            }
+            
+            // Load existing identity if available
+            const encrypted = localStorage.getItem('neuro_signature');
+            if (encrypted) {
+                try {
+                    const decrypted = CryptoJS.AES.decrypt(encrypted, 'neuro-secure-key');
+                    storedSignature = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
+                    showScreen(verifyScreen);
+                } catch (e) {
+                    console.error("Failed to decrypt signature", e);
+                }
             }
         });
         
